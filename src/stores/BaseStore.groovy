@@ -1,5 +1,0 @@
-package stores
-
-class BaseStore {
-
-}
