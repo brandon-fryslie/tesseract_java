@@ -9,34 +9,34 @@ import websocket.WebsocketInterface
 // playlist, etc
 
 public class PlaylistManager {
-  public static PlaylistManager instance;
-  private Channel channel;
-  private WebsocketInterface ws = WebsocketInterface.get();
+  public static PlaylistManager instance
+  private Channel channel
+  private WebsocketInterface ws = WebsocketInterface.get()
 
-  private Playlist currentPlaylist;
+  private Playlist currentPlaylist
 
   private PlaylistStore playlistStore
 
   public PlaylistManager() {
-    this.playlistStore = PlaylistStore.get();
+    this.playlistStore = PlaylistStore.get()
 //    this.registerHandlers();
   }
 
   // Singleton
   public static PlaylistManager get() {
     if (instance == null) {
-      instance = new PlaylistManager();
+      instance = new PlaylistManager()
     }
 
     instance
   }
 
   public void setChannel(Channel channel) {
-    this.channel = channel;
+    this.channel = channel
   }
 
   public Playlist getCurrentPlaylist() {
-    return this.currentPlaylist;
+    return this.currentPlaylist
   }
 
   public PlayState getCurrentPlayState() {
@@ -64,7 +64,7 @@ public class PlaylistManager {
 
   // Get the initial playlist (or non-initial, or whatever)
   public Playlist getInitialPlaylist(Integer playlistId) {
-    Playlist p;
+    Playlist p
     if (!playlistId) {
       p = this.playlistStore.getItems().first()
       if (!p) throw new RuntimeException("Error: PlaylistManager: PlaylistStore is empty!")
@@ -82,11 +82,11 @@ public class PlaylistManager {
     if (this.currentPlaylist != p) {
       //this should be wrapped by a "debug" setting
       //println "[PlaylistManager: Switching playlist from ${this.currentPlaylist.displayName} to ${this.currentPlaylist.displayName}"
-      this.currentPlaylist = p;
+      this.currentPlaylist = p
       this.channel.unsetScene()
     }
 
-    p.setChannel(this.channel);
+    p.setChannel(this.channel)
     this.getCurrentPlaylist().stop(false)
 
   }
@@ -103,11 +103,11 @@ public class PlaylistManager {
       if (this.currentPlaylist) {
         this.currentPlaylist.unload()
       }
-      this.currentPlaylist = p;
+      this.currentPlaylist = p
     }
 
-    p.setChannel(this.channel);
+    p.setChannel(this.channel)
 
-    p.play(playlistItemId, playState);
+    p.play(playlistItemId, playState)
   }
 }

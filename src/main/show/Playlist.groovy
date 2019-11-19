@@ -2,14 +2,14 @@ package show
 
 import clip.VideoClip
 import model.Channel
-import state.StateManager;
+import state.StateManager
 
 public class Playlist {
-  int id;
-  String displayName;
-  Channel channel;
-  Integer defaultDuration;
-  List<PlaylistItem> items;
+  int id
+  String displayName
+  Channel channel
+  Integer defaultDuration
+  List<PlaylistItem> items
 
   // PLAYING: the playlist is playing a scene and advancing to the next scene after the specified duration
   // LOOP_SCENE: the playlist is playing a scene but NOT advancing to the next scene (play the same scene forever)
@@ -19,26 +19,26 @@ public class Playlist {
   }
 
   // Track whether we're playing, looping, or stopped
-  PlayState currentPlayState;
+  PlayState currentPlayState
 
   // The current playlist item
-  PlaylistItem currentItem;
+  PlaylistItem currentItem
 
-  private Timer currentTimer;
-  private long currentTimerStartTime;
+  private Timer currentTimer
+  private long currentTimerStartTime
 
   public Playlist(int id, String displayName, Integer defaultDuration = 60, List<PlaylistItem> items = []) {
-    this.id = id;
-    this.displayName = displayName;
-    this.defaultDuration = defaultDuration;
-    this.items = items;
+    this.id = id
+    this.displayName = displayName
+    this.defaultDuration = defaultDuration
+    this.items = items
 
     // start initially in the stopped state, when the initial data loads it will update
-    this.currentPlayState = PlayState.STOPPED;
+    this.currentPlayState = PlayState.STOPPED
   }
 
   public void setChannel(Channel channel) {
-    this.channel = channel;
+    this.channel = channel
   }
 
   private PlaylistItem getNextItem() {
@@ -53,16 +53,16 @@ public class Playlist {
   // Get the index of the next item.  for now we will play everything sequentially (but we could add 'shuffle' later)
   private Integer getNextIdx() {
     if (this.items.size() == 0) {
-      return -1; // this means there are no items in the playlist and we don't have a next item
+      return -1 // this means there are no items in the playlist and we don't have a next item
     }
 
     Integer currentItemIndex = this.items.findIndexOf { it == this.getCurrentItem() }
     currentItemIndex = currentItemIndex ?: 0
 
     // always repeat for now
-    currentItemIndex++;
+    currentItemIndex++
     if (currentItemIndex >= items.size()) {
-      currentItemIndex = 0;
+      currentItemIndex = 0
     }
 
     currentItemIndex
@@ -83,30 +83,30 @@ public class Playlist {
       return
     }
 
-    this._playPlaylist(nextItem, this.getCurrentPlayState());
+    this._playPlaylist(nextItem, this.getCurrentPlayState())
   }
 
   private void scheduleNextScene(long delay) {
     TimerTask task = new TimerTask() {
       public void run() {
-        _playPlaylist(getNextItem(), getCurrentPlayState());
+        _playPlaylist(getNextItem(), getCurrentPlayState())
       }
-    };
+    }
 
-    Timer timer = new Timer("Playlist.scheduleNextScene()");
+    Timer timer = new Timer("Playlist.scheduleNextScene()")
 
     // Keep track of when we started the timer
     this.currentTimerStartTime = System.currentTimeMillis()
-    timer.schedule(task, delay);
+    timer.schedule(task, delay)
 
     // Keep track of the timer itself
-    this.currentTimer = timer;
+    this.currentTimer = timer
   }
 
   // figure out how long we have until our timer expires
   public long getCurrentSceneDurationRemaining() {
     if (!this.currentTimer) {
-      return -1; // infinity
+      return -1 // infinity
     }
 
     // Time thats elapsed since we started the timer
@@ -193,15 +193,15 @@ public class Playlist {
     */
 
 
-    this.channel.setScene(item.scene, false, 10);
+    this.channel.setScene(item.scene, false, 10)
 
     //wrap this in a "debug"
-    System.out.println("[Playlist] Playing scene '${item.scene.getDisplayName()}' on playlist '${this.displayName}' (Playstate: ${playState})");
+    System.out.println("[Playlist] Playing scene '${item.scene.getDisplayName()}' on playlist '${this.displayName}' (Playstate: ${playState})")
 
     // Schedule the next item
     if (playState == PlayState.PLAYING) {
-      long delay = item.duration * 1000 as long;
-      this.scheduleNextScene(delay);
+      long delay = item.duration * 1000 as long
+      this.scheduleNextScene(delay)
     }
 
     // Send a 'stateUpdated' event to the UI.  we will need to send one of these whenever state changes and we need to update the frontend

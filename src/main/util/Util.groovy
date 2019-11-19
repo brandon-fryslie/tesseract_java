@@ -121,25 +121,25 @@ public class Util {
   //COLOR utility methods
   //c in this case is a processing type "color" which is really just a 32 bit integer
   public static int getR(int c) {
-    return c >> 16 & 0xFF;
+    return c >> 16 & 0xFF
   }
 
   public static int getG(int c) {
-    return c >> 8 & 0xFF;
+    return c >> 8 & 0xFF
   }
 
   public static int getB(int c) {
-    return c & 0xFF;
+    return c & 0xFF
   }
 
   public static float randFloatRange(float min, float max) {
-    Random rand = new Random();
-    float result = rand.nextFloat() * (max - min) + min;
-    return result;
+    Random rand = new Random()
+    float result = rand.nextFloat() * (max - min) + min
+    return result
   }
 
   public static float getPercent(int loaded, int total) {
-    return ((float) loaded / total) * 100;
+    return ((float) loaded / total) * 100
   }
 
   //TODO move to another static class
@@ -158,10 +158,10 @@ public class Util {
         new PlaylistItem(UUID.randomUUID().toString(), 'Color Wash', 4),
         new PlaylistItem(UUID.randomUUID().toString(), 'Purple', 5),
         new PlaylistItem(UUID.randomUUID().toString(), 'Red', 7),
-    ));
+    ))
 
-    Playlist playlist1 = new Playlist(1, "Cubotron", 60, playlist1Items);
-    PlaylistStore.get().addOrUpdate(playlist1);
+    Playlist playlist1 = new Playlist(1, "Cubotron", 60, playlist1Items)
+    PlaylistStore.get().addOrUpdate(playlist1)
 
     List<PlaylistItem> playlist2Items = new LinkedList<>(Arrays.asList(
             new PlaylistItem(UUID.randomUUID().toString(), 'LinesClip', 10),
@@ -171,10 +171,10 @@ public class Util {
         new PlaylistItem(UUID.randomUUID().toString(), 'Red', 3),
         new PlaylistItem(UUID.randomUUID().toString(), 'Yellow', 4),
             new PlaylistItem(UUID.randomUUID().toString(), 'Color Wash', 4),
-    ));
+    ))
 
-    Playlist playlist2 = new Playlist(2, "Color Cube", 60, playlist2Items);
-    PlaylistStore.get().addOrUpdate(playlist2);
+    Playlist playlist2 = new Playlist(2, "Color Cube", 60, playlist2Items)
+    PlaylistStore.get().addOrUpdate(playlist2)
 
     // Determine if there are any videos loaded.  If so, create a playlist containing them all.  If not, delete the playlist if it exists
     List<Scene> allVideoScenes = SceneStore.get().getItems()
@@ -230,7 +230,7 @@ public class Util {
           .each { scene -> SceneStore.get().remove(scene) }
     }
 
-    scenes.each { SceneStore.get().addOrUpdate(it); }
+    scenes.each { SceneStore.get().addOrUpdate(it) }
   }
 
   public static void throwException(String msg) {

@@ -26,7 +26,7 @@ public class NodeScanClip extends AbstractClip {
     public void run() {
         _scanNode++;
 
-        if(_scanNode >= _myMain.stage.nodes.length){
+        if(_scanNode >= _myMain.stage.getNodes().length){
             _scanNode = 0;
         }
 

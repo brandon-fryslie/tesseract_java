@@ -1,11 +1,11 @@
-package clip;
+package clip
 
 
-import processing.video.*;
+import processing.video.*
 
-import environment.Node;
-import stores.MediaStore;
-import util.Util;
+import environment.Node
+import stores.MediaStore
+import util.Util
 
 
 
@@ -14,18 +14,18 @@ public class VideoClip extends AbstractClip{
     //CLASS VARS
 
     // Size of each cell in the grid, ratio of window size to video size
-    private int _videoScale = 16;
+    private int _videoScale = 16
     // Number of columns and rows in the system
-    private int _cols, _rows;
+    private int _cols, _rows
 
     // Step 1. Declare a Movie object.
-    public Movie movie;
+    public Movie movie
 
-    private int _videoW = 640;
-    private int _videoH = 360;
+    private int _videoW = 640
+    private int _videoH = 360
 
     // We have to define the field here too or Groovy tries to call setFilename when we do 'this.filename = filename' below, leading to an infinite loop.  Annoying
-    public filename;
+    public filename
 
     //constructor
     public VideoClip() {
@@ -33,47 +33,47 @@ public class VideoClip extends AbstractClip{
 
     public void init() {
 
-        clipId = "video";
+        clipId = "video"
 
-        super.init();
+        super.init()
 
         // Initialize columns and rows
-        _cols = _videoW/_videoScale;
-        _rows = _videoH/_videoScale;
+        _cols = _videoW/_videoScale
+        _rows = _videoH/_videoScale
     }
 
     // set the filename for the movie
     // handle creating the movie object and all that
     public void setFilename(String filename) {
         if (!MediaStore.get().containsMedia("videos", filename)) {
-            System.out.println("[VideoClip] Warning: Tried to set non-existent mediafile of type 'video' and filename '" + filename + "'");
-            return;
+            System.out.println("[VideoClip] Warning: Tried to set non-existent mediafile of type 'video' and filename '" + filename + "'")
+            return
         }
 
-        this.filename = filename;
+        this.filename = filename
 
         if (movie != null) {
-            movie.stop();
+            movie.stop()
         }
 
         // Step 2. Initialize Movie object. The file should live in the data/videos folder.
-        movie = new Movie(_myMain, "videos/" + filename);
+        movie = new Movie(_myMain, "videos/" + filename)
     }
 
     public void run() {
         if(movie != null) {
             if (!movie.playbin.isPlaying()) {
                 // Step 3. Start playing movie. To play just once play() can be used instead.
-                movie.loop();
+                movie.loop()
             }
 
-            movie.loadPixels();
+            movie.loadPixels()
         }
     }
 
     public int[] drawNode(Node node) {
 
-        int[] nodestate = new int[3];
+        int[] nodestate = new int[3]
 
         //cool mirroring
         /*
@@ -84,13 +84,13 @@ public class VideoClip extends AbstractClip{
         */
 
 
-        int vidX = (int) _myMain.map(node.screenX, 0, 1400, 0, _videoW-1);
-        int vidY = (int) _myMain.map(node.screenY,0, 800, 0, _videoH-1);
+        int vidX = (int) _myMain.map(node.screenX, 0, 1400, 0, _videoW-1)
+        int vidY = (int) _myMain.map(node.screenY,0, 800, 0, _videoH-1)
 
 
 
-        int loc = vidX + vidY * _videoW;
-        int c = 0;
+        int loc = vidX + vidY * _videoW
+        int c = 0
         if(movie != null) {
             //make sure we don't overrun the array which can happen when pixels go offscreen
             // This is to handle a case when we are switching the video file and don't want to get exceptions
@@ -105,22 +105,22 @@ public class VideoClip extends AbstractClip{
                 //
                 // Colors from copyPixels are inverted. Using the - (negative) sign results in strange results, because its 32 bit and does not account for alpha. Using the -, the videos certainly did not look correct so lets leave it like this for now.
                 // We will add some master filters like "invert", and "hue wheel"
-                c = movie.copyPixels[loc];
+                c = movie.copyPixels[loc]
             }
         }
 
         //int values 0-255 for R G and B
-        nodestate[0] = Util.getR(c);
-        nodestate[1] = Util.getG(c);
-        nodestate[2] = Util.getB(c);
+        nodestate[0] = Util.getR(c)
+        nodestate[1] = Util.getG(c)
+        nodestate[2] = Util.getB(c)
 
-        return nodestate;
+        return nodestate
     }
 
     public void die() {
-        movie.stop();
+        movie.stop()
 
-        super.die();
+        super.die()
     }
 
 

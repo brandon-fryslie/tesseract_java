@@ -4,24 +4,23 @@ import mapping.ReadDracoMapping
 import hardware.*
 import util.Util
 
-public class StrandPanel {
+public class DracoPanel {
 
-    private int _scale = 6;
+    private int _scale = 6
 
-    public int pinNum;
-    public Teensy teensy;
-    public environment.Node[] strandNodeArray;
+    public int pinNum
+    public DracoController teensy
+    public environment.Node[] strandNodeArray
 
 
-
-    public StrandPanel() {
-        strandNodeArray = new Node[0];
+    public DracoPanel() {
+        strandNodeArray = new Node[0]
     }
 
 
     // If we don't specify environment.Node[] (instead of just Node[]), it was conflicting with an existing Node[] class in groovy
     // Strangly it would run in IntelliJ, but when I compiled the app with gradle it complained
-    public environment.Node[] buildPanel(Teensy theTeensy, int thePinNum, String panelSpecies, int globalIndex, int startX, int startY, int startZ, int rotation) {
+    public environment.Node[] buildPanel(DracoController theTeensy, int thePinNum, String panelSpecies, int globalIndex, int startX, int startY, int startZ, int rotation) {
 
         //used for sending UDP data for this strand
         teensy = theTeensy

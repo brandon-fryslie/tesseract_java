@@ -26,7 +26,7 @@ class TestUtil {
     // By using 'stub', we can mock specific methods without messing with the rest of them
     // We MUST specify the parameter types or it will silently ignore our mock!
     String dataDir = tmpDir.getRoot().getCanonicalPath()
-    PowerMockito.stub(PowerMockito.method(Util.class, "getDataDir", String)).toReturn(dataDir);
+    PowerMockito.stub(PowerMockito.method(Util.class, "getDataDir", String)).toReturn(dataDir)
   }
 
   public static Map getMockPlaylist(Map data) {

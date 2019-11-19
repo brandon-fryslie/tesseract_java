@@ -20,10 +20,10 @@ import static org.hamcrest.junit.MatcherAssert.assertThat
 class TesseractAppTest {
 
   @Rule
-  public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
+  public final SystemOutRule systemOutRule = new SystemOutRule().enableLog()
 
   @Rule
-  public final SystemErrRule systemErrRule = new SystemErrRule().enableLog();
+  public final SystemErrRule systemErrRule = new SystemErrRule().enableLog()
 
   @After
   void teardown() {

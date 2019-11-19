@@ -32,11 +32,11 @@ class PlaylistStore extends BaseStore implements IJsonPersistable {
   }
 
   public List<Playlist> getItems() {
-    return this.items;
+    return this.items
   }
 
   public void setItems(List<Playlist> items) {
-    this.items = items;
+    this.items = items
   }
 
   // Add or update a playlist in the store.  If the ID of the scene already exists, it will update the values
@@ -65,7 +65,7 @@ class PlaylistStore extends BaseStore implements IJsonPersistable {
       Scene scene = SceneStore.get().find 'id', playlistItem.sceneId
 
       // create new id for playlist item if one doesn't exist
-      String playlistItemId = playlistItem.id ?: UUID.randomUUID();
+      String playlistItemId = playlistItem.id ?: UUID.randomUUID()
 
       new PlaylistItem(playlistItemId, scene, playlistItem.duration)
     }

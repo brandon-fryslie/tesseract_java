@@ -7,7 +7,7 @@ import util.Util;
 
 public class Scene {
 
-    public AbstractClip clip; //use getter setter
+    private AbstractClip clip; //use getter setter
 
     //these are the saved values for the current clips parameters
     // all parameters should be normalized to a range 0.00 - 1.00
@@ -52,6 +52,10 @@ public class Scene {
         }
         Integer clipClass = Util.getClipEnumValue(clipId);
         this.constructNewClip(clipClass);
+    }
+
+    public AbstractClip getClip() {
+        return this.clip;
     }
 
     public String getDisplayName() {

@@ -170,12 +170,12 @@ class WebsocketInterface extends WebSocketServer {
   // Shutdown server properly so we don't leave the port open when we hard kill the Processing app
   void shutdownServer() {
     try {
-      println("Trying to kill the websocket server".yellow());
-      WebsocketInterface.get().stop();
-      println("The server is shut down".green());
+      println("Trying to kill the websocket server".yellow())
+      WebsocketInterface.get().stop()
+      println("The server is shut down".green())
     } catch (IOException | InterruptedException e) {
-      println("Error!  Could not shut down the websocket server".red());
-      e.printStackTrace();
+      println("Error!  Could not shut down the websocket server".red())
+      e.printStackTrace()
     }
   }
 }

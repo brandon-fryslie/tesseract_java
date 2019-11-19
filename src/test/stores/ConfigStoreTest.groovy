@@ -35,17 +35,17 @@ class ConfigStoreTest {
 
   // This rule automatically restores any system properties we set in test cases
   @Rule
-  public RestoreSystemProperties restoreSystemProperties = new RestoreSystemProperties();
+  public RestoreSystemProperties restoreSystemProperties = new RestoreSystemProperties()
 
   // Allows us to set env vars that are automatically cleaned up between tests
   @Rule
-  public final EnvironmentVariables environmentVariables = new EnvironmentVariables();
+  public final EnvironmentVariables environmentVariables = new EnvironmentVariables()
 
   @Rule
-  public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
+  public final SystemOutRule systemOutRule = new SystemOutRule().enableLog()
 
   @Rule
-  public final SystemErrRule systemErrRule = new SystemErrRule().enableLog();
+  public final SystemErrRule systemErrRule = new SystemErrRule().enableLog()
 
   @Before
   void setUp() {
@@ -85,8 +85,8 @@ class ConfigStoreTest {
     TestUtil.createMockPlaylists()
 
     // Expect an exception to be thrown w/ a specific msg
-    thrown.expect(RuntimeException.class);
-    thrown.expectMessage("ERROR: Failed validation of option 'initialPlaylist': Playlist 'non-existent playlist' does not exist");
+    thrown.expect(RuntimeException.class)
+    thrown.expectMessage("ERROR: Failed validation of option 'initialPlaylist': Playlist 'non-existent playlist' does not exist")
 
     // This will cause the exception to be thrown
     ConfigStore.get().getString('initialPlaylist')
@@ -111,8 +111,8 @@ class ConfigStoreTest {
     TestUtil.mockConfigFile(tmpDir, [initialPlaylist: 'Color Cube', initialPlayState: 'some_random_thing'])
 
     // Expect an exception to be thrown w/ a specific msg
-    thrown.expect(RuntimeException.class);
-    thrown.expectMessage("ERROR: Failed validation of option 'initialPlayState': PlayState 'SOME_RANDOM_THING' is invalid.  Must be one of 'PLAYING', 'LOOP_SCENE', or 'STOPPED'");
+    thrown.expect(RuntimeException.class)
+    thrown.expectMessage("ERROR: Failed validation of option 'initialPlayState': PlayState 'SOME_RANDOM_THING' is invalid.  Must be one of 'PLAYING', 'LOOP_SCENE', or 'STOPPED'")
 
     ConfigStore.get().getString('initialPlayState')
   }

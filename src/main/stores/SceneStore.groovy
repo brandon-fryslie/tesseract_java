@@ -52,7 +52,7 @@ class SceneStore extends BaseStore implements IJsonPersistable {
   // Remove a scene from the store
   public remove(Scene scene) {
     println "[SceneStore] Removing Scene '${scene.displayName}'"
-    this.items.removeElement(scene);
+    this.items.removeElement(scene)
   }
 
   public Scene find(String property, value) {
@@ -73,7 +73,7 @@ class SceneStore extends BaseStore implements IJsonPersistable {
     Integer clipClass = Util.getClipEnumValue(jsonObj.clipId)
 
     // ensure the list is the right size
-    float[] values = new float[8];
+    float[] values = new float[8]
     jsonObj.clipValues.eachWithIndex { float val, int idx -> values[idx] = val }
 
     // for filename, default it to the default value of the 'video' clip filename

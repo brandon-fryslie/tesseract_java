@@ -127,10 +127,12 @@ public class TesseractMain extends PApplet {
 
 
     //get the full list of hardware nodes
-    int l = stage.nodes.length;
+    int l = stage.getNodes().length;
 
-    Node[] nextNodes = stage.nodes;
-    stage.prevNodes = stage.nodes;
+    Node[] nextNodes = stage.getNodes();
+
+    // something for transitions
+//    stage.prevNodes = stage.getNodes();
 
     for (int i = 0; i < l; i++) {
       Node n = nextNodes[i];
@@ -144,7 +146,7 @@ public class TesseractMain extends PApplet {
       nextNodes[i] = n;
     }
 
-    stage.nodes = nextNodes;
+//    stage.nodes = nextNodes;
 
     onScreen.draw();
 

@@ -2,18 +2,17 @@ package output;
 
 
 import environment.DracoPanel;
-import hardware.Tile;
-import hypermedia.net.UDP;
-//import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
-
-import processing.core.PApplet;
-
-import hardware.*;
 import environment.Node;
+import hardware.DracoController;
+import hardware.Rabbit;
+import hypermedia.net.UDP;
+import processing.core.PApplet;
 import stores.ConfigStore;
 
+//import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
 
-public class UDPModel {
+
+public class WledUdpController {
 
     private PApplet p;
     private UDP udp;
@@ -39,11 +38,15 @@ public class UDPModel {
     private int[][] nodeMap = new int[12][12];
 
 
-    public UDPModel(PApplet pApplet) {
+    public WledUdpController(PApplet pApplet) {
         p = pApplet;
 
         initRabbits();
         initTeensies();
+
+        Integer numTeensies = ConfigStore.get().getInt("numTeensies");
+
+
 
         //red
         c[0] = 200;//255 is max
@@ -139,21 +142,6 @@ public class UDPModel {
     }
 
     public void send() {
-        for (Rabbit rabbit : rabbits) {
-            //System.out.printf("RABBIT IP: %s \n", rabbit.ip);
-
-            for (Tile tile : rabbit.tileArray) {
-                sendTileFrame(tile);
-            }
-
-            //swap command, makes all the tiles change at once
-            byte[] data = new byte[2];
-            data[0] = (byte) (p.unhex("FF"));
-            data[1] = (byte) (p.unhex("FE"));
-            udp.send( data, rabbit.ip, rabbitPort );
-        }
-
-
         for (DracoController dracoController : teensies) {
             //sendTeensyNodesAsPanels(dracoController);
 
@@ -164,62 +152,7 @@ public class UDPModel {
             data[0] = (byte) ('s');
             udp.send( data, dracoController.ip, teensyPort );
         }
-
     }
-
-
-    // Send tile to Tesseract
-    public void sendTileFrame(Tile tile){
-        //data for one tile, one frame
-        byte[] data = new byte[(432+4)]; //144 nodes * 3 channels per node = 432
-
-        data[0] = (byte) (p.unhex("ff")); //listen for command
-        data[1] = (byte) (p.unhex("ff")); //chip command
-        data[2] = (byte) (p.unhex("00")); //start command
-        data[3] = (byte) (tile.id-1); //tile address
-
-        //node map for one tile
-        for (int y=0; y<12; y++){
-            for (int x=0; x<12; x++){
-                //one node, set each channel
-                Node node = tile.tileNodeArray[x][y];
-
-                data[nodeMap[y][x]+4] = (byte)node.g;
-                data[nodeMap[y][x]+3+4] = (byte)node.r;
-                data[nodeMap[y][x]+6+4] = (byte)node.b;
-
-                //hack for using v1 tiles
-                if(tile.channelSwap){
-                    data[nodeMap[y][x]+4] = (byte)node.b;
-                    data[nodeMap[y][x]+6+4] = (byte)node.g;
-                }
-            }
-        }
-        // send the message for 1 tile
-        String ip = tile.parentRabbit.ip;
-
-        //if(app.BROADCAST && ip!="X.X.X.X"){
-            udp.send( data, ip, rabbitPort );
-        //}
-
-    }//end sendTileFrame
-
-
-    // Send data to the Draco panels via DracoController
-    public void sendFlameTest(int pin, int on) {
-
-        for (DracoController dracoController : teensies) {
-            System.out.printf("FIRE TEENSY IP: %s \n", dracoController.ip);
-
-            //fire command
-            byte[] data = new byte[3];
-            data[0] = (byte) ('f');
-            data[1] = (byte) pin;
-            data[2] = (byte) on;
-            udp.send(data, dracoController.ip, teensyPort);
-        }
-    }
-
 
     // Send data to the Draco panels via DracoController
     public void sendPanelFrame(DracoController dracoController) {

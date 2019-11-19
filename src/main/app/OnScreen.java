@@ -114,10 +114,10 @@ public class OnScreen {
         //draw nodes
         p.strokeWeight(4);
 
-        if(_myMain.stage.nodes != null) {
-            int l = _myMain.stage.nodes.length;
+        if(_myMain.stage.getNodes() != null) {
+            int l = _myMain.stage.getNodes().length;
             for (int i = 0; i < l; i++) {
-                Node node = _myMain.stage.nodes[i];
+                Node node = _myMain.stage.getNodes()[i];
                 p.stroke(node.r, node.g, node.b);
                 p.point(node.x, node.y, node.z);
 

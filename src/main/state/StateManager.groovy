@@ -15,7 +15,7 @@ import websocket.WebsocketInterface
 // State manager is responsible for managing application state and synchronizing state
 // between client(s) and server
 class StateManager {
-  public static StateManager instance;
+  public static StateManager instance
 
   WebsocketInterface ws = WebsocketInterface.get()
 
@@ -76,7 +76,7 @@ class StateManager {
       }
 
       if (containingPlaylist == null) {
-        throw new RuntimeException("Error: active playlist item does not belong to a playlist");
+        throw new RuntimeException("Error: active playlist item does not belong to a playlist")
       }
     }
 
@@ -94,7 +94,7 @@ class StateManager {
   }
 
   public void sendActiveState() {
-    this.sendStateUpdate("activeState", this.getActiveState());
+    this.sendStateUpdate("activeState", this.getActiveState())
   }
 
   // Sends the state of the relevant objects to the front end for initial hydration
@@ -109,7 +109,7 @@ class StateManager {
             activeState : this.getActiveState(),
     ]
 
-    ws.sendMessage(conn, 'sendInitialState', data);
+    ws.sendMessage(conn, 'sendInitialState', data)
   }
 
   // Refresh the Scenes and Playlists
@@ -143,15 +143,15 @@ class StateManager {
   // Handle receiving a stateUpdate event from a client
   public void handleStateUpdate(conn, inData) {
     if (inData.stateKey == "activeControls") {
-      this.handleActiveControlsUpdate(inData.value);
+      this.handleActiveControlsUpdate(inData.value)
     } else if (inData.stateKey == "playlist") {
-      this.handlePlaylistUpdate(inData.value);
+      this.handlePlaylistUpdate(inData.value)
     } else if (inData.stateKey == "scene") {
-      this.handleSceneUpdate(inData.value);
+      this.handleSceneUpdate(inData.value)
     } else if (inData.stateKey == "sceneDelete") {
-      this.handleSceneDelete(inData.value);
+      this.handleSceneDelete(inData.value)
     } else if (inData.stateKey == "playState") {
-      this.handlePlayStateUpdate(inData.value);
+      this.handlePlayStateUpdate(inData.value)
     } else {
       // The reason I use RuntimeException is because they can't be caught (by Processing), so you are always guaranteed to see the stack trace
       throw new RuntimeException("Error: No handler for state key '${inData.stateKey}'")
@@ -168,7 +168,7 @@ class StateManager {
 
     // Handle video file changes, they are special
     if (inData.fieldName == 'filename') {
-      String newValue = inData.newValue;
+      String newValue = inData.newValue
       clip.setFilename(newValue)
       return
     }
