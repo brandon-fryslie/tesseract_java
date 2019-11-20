@@ -1,12 +1,10 @@
 package clip;
 
-import environment.Node;
+import environment.PixelNode;
 import model.Palette;
-import processing.core.PApplet;
 import util.Util;
 
 import static processing.core.PApplet.map;
-import static processing.core.PConstants.TWO_PI;
 
 public class PerlinNoiseClip  extends AbstractClip {
 
@@ -53,15 +51,15 @@ public class PerlinNoiseClip  extends AbstractClip {
 
     }
 
-    public int[] drawNode(Node node) {
+    public int[] drawNode(PixelNode pixelNode) {
 
         int[] nodestate = new int[3];
 
 
         // Calculate noise and scale by 255
-        float nX = (node.x - 1000) * _noiseScale;
-        float nY = node.y * _noiseScale;
-        float nZ = node.z * _noiseScale;
+        float nX = (pixelNode.getX() - 1000) * _noiseScale;
+        float nY = pixelNode.getY() * _noiseScale;
+        float nZ = pixelNode.getZ() * _noiseScale;
 
         _myMain.noiseDetail(_lod, _falloff);
 

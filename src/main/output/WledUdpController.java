@@ -2,9 +2,8 @@ package output;
 
 
 import environment.DracoPanel;
-import environment.Node;
+import environment.PixelNode;
 import hardware.DracoController;
-import hardware.Rabbit;
 import hypermedia.net.UDP;
 import processing.core.PApplet;
 import stores.ConfigStore;
@@ -17,7 +16,6 @@ public class WledUdpController {
     private PApplet p;
     private UDP udp;
 
-    public Rabbit[] rabbits;
     public DracoController[] teensies;
 
     public int myPort      = 7777; //6000 also works
@@ -41,12 +39,9 @@ public class WledUdpController {
     public WledUdpController(PApplet pApplet) {
         p = pApplet;
 
-        initRabbits();
         initTeensies();
 
         Integer numTeensies = ConfigStore.get().getInt("numTeensies");
-
-
 
         //red
         c[0] = 200;//255 is max
@@ -73,13 +68,6 @@ public class WledUdpController {
 
         udp.log( false );     // <-- printout the connection activity, but performance is affected
         udp.listen( false );
-    }
-
-    // Initialize the rabbit controllers.  Number of controllers is set in env var NUM_RABBITS.  default is 0
-    private void initRabbits() {
-        Integer numRabbits = ConfigStore.get().getInt("numRabbits");
-        rabbits = new Rabbit[numRabbits];
-        // TODO: need to initialize from values in env vars
     }
 
     // Initialize the teensy (draco) controllers.  Number of controllers is set in env var NUM_TEENSIES.  default is 0
@@ -169,11 +157,11 @@ public class WledUdpController {
             data[1] = (byte) dracoPanel.pinNum; //pin address, once again we are doing one node per pin
 
             for (int i=0; i<l; i++){
-                Node node = dracoPanel.strandNodeArray[i];
+                PixelNode pixelNode = dracoPanel.strandNodeArray[i];
 
-                data[(i*3) + 0 +2] = (byte) node.r;
-                data[(i*3) + 1 +2] = (byte) node.g;
-                data[(i*3) + 2 +2] = (byte) node.b;
+                data[(i*3) + 0 +2] = (byte) pixelNode.getR();
+                data[(i*3) + 1 +2] = (byte) pixelNode.getG();
+                data[(i*3) + 2 +2] = (byte) pixelNode.getB();
 
                 //for the love of god, something please just happen on the lights so I know my life isn't a complete sham.
                 //data[(i*3) + 0 +2] = (byte) (PApplet.unhex("FF"));
@@ -195,7 +183,7 @@ public class WledUdpController {
         //basically a node is an entire panel or tile
         for (int t=0; t<length; t++){
 
-            Node node =  teensy.nodeArray[t];
+            PixelNode node =  teensy.nodeArray[t];
             int ledPerPin = 100;
 
             byte[] data = new byte[(ledPerPin*3) + 2];

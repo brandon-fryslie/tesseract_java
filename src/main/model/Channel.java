@@ -1,10 +1,9 @@
 package model;
 
 import clip.*;
-import environment.Node;
+import environment.PixelNode;
 import processing.core.PApplet;
 import show.Scene;
-import app.*;
 
 
 public class Channel {
@@ -96,13 +95,13 @@ public class Channel {
   }
 
   //this is just a generic call that reaches down into clips to perform drawing unique to each clip
-  public int[] drawNode(Node node) {
+  public int[] drawNode(PixelNode pixelNode) {
     if (currentClip != null) {
-      return currentClip.drawNode(node);
+      return currentClip.drawNode(pixelNode);
 
     } else if (_currentScene != null && _nextScene == null) {
       if (_currentScene.getClip() != null) {
-        return _currentScene.getClip().drawNode(node);
+        return _currentScene.getClip().drawNode(pixelNode);
       }
 
 
@@ -113,11 +112,11 @@ public class Channel {
       int[] sceneMix = new int[3];
 
       if (_currentScene.getClip() != null) {
-        currentRgb = _currentScene.getClip().drawNode(node);
+        currentRgb = _currentScene.getClip().drawNode(pixelNode);
       }
 
       if (_nextScene.getClip() != null) {
-        nextRgb = _nextScene.getClip().drawNode(node);
+        nextRgb = _nextScene.getClip().drawNode(pixelNode);
       }
 
 

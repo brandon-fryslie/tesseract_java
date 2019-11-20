@@ -1,6 +1,6 @@
 package clip;
 
-import environment.Node;
+import environment.PixelNode;
 import util.Util;
 
 public class ColorWashClip extends AbstractClip {
@@ -46,9 +46,9 @@ public class ColorWashClip extends AbstractClip {
     }
     */
 
-    public int[] drawNode(Node node) {
-        _angleCalc =  node.y * _angle1;
-        _angleCalc += node.x * _angle2;
+    public int[] drawNode(PixelNode pixelNode) {
+        _angleCalc =  pixelNode.getY() * _angle1;
+        _angleCalc += pixelNode.getX() * _angle2;
         //System.out.printf("%.3f ", _angleCalc);
 
         _angle = _angleCalc*_spreadCalc;

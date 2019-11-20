@@ -1,11 +1,8 @@
 package clip;
 
-import environment.Node;
+import environment.PixelNode;
 
 public class NodeScanClip extends AbstractClip {
-
-    //setting this in init() function, which is better?
-    //String clipId = "node_scan";
 
     private int _scanNode;
 
@@ -15,7 +12,6 @@ public class NodeScanClip extends AbstractClip {
     }
 
     public void init() {
-
         clipId = "node_scan";
 
         super.init();
@@ -32,11 +28,11 @@ public class NodeScanClip extends AbstractClip {
 
     }
 
-    public int[] drawNode(Node node) {
+    public int[] drawNode(PixelNode pixelNode) {
 
         int[] nodestate = new int[3];
 
-        if(node.index == _scanNode){
+        if(pixelNode.getIndex() == _scanNode){
             nodestate[0] = 255;
             nodestate[1] = 255;
             nodestate[2] = 255;

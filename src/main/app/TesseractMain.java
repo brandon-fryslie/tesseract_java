@@ -1,6 +1,6 @@
 package app;
 
-import environment.Node;
+import environment.PixelNode;
 import environment.Stage;
 import model.Channel;
 import output.UDPModel;
@@ -129,24 +129,24 @@ public class TesseractMain extends PApplet {
     //get the full list of hardware nodes
     int l = stage.getNodes().length;
 
-    Node[] nextNodes = stage.getNodes();
+    PixelNode[] nextPixelNodes = stage.getNodes();
 
     // something for transitions
 //    stage.prevNodes = stage.getNodes();
 
     for (int i = 0; i < l; i++) {
-      Node n = nextNodes[i];
-      int[] rgb = renderNode(n); //does the blending between the channels, apply master FX
+      PixelNode node = nextPixelNodes[i];
+      int[] rgb = renderNode(node); //does the blending between the channels, apply master FX
+
+
 
       //now store that color on the node so we can send it as UDP data to the lights
-      n.r = rgb[0];
-      n.g = rgb[1];
-      n.b = rgb[2];
+      node.setRGB(rgb[0], rgb[1], rgb[2]);
 
-      nextNodes[i] = n;
+      nextPixelNodes[i] = node;
     }
 
-//    stage.nodes = nextNodes;
+//    stage.nodes = nextPixelNodes;
 
     onScreen.draw();
 
@@ -159,10 +159,10 @@ public class TesseractMain extends PApplet {
   }
 
 
-  //determine final color for each node each frame
-  public int[] renderNode(Node node) {
+  //determine final color for each pixelNode each frame
+  public int[] renderNode(PixelNode pixelNode) {
     //return
-    int[] rgb1 = channel1.drawNode(node);
+    int[] rgb1 = channel1.drawNode(pixelNode);
 
 
     //apply channel brightness
@@ -174,7 +174,7 @@ public class TesseractMain extends PApplet {
 
     return rgb1;
 
-  }//end render node
+  }//end render pixelNode
 
 
   private void createShutdownHook() {

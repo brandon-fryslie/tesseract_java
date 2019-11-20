@@ -3,7 +3,7 @@ package clip
 
 import processing.video.*
 
-import environment.Node
+import environment.PixelNode
 import stores.MediaStore
 import util.Util
 
@@ -71,7 +71,7 @@ public class VideoClip extends AbstractClip{
         }
     }
 
-    public int[] drawNode(Node node) {
+    public int[] drawNode(PixelNode node) {
 
         int[] nodestate = new int[3]
 

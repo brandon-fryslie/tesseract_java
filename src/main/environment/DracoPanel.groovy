@@ -10,17 +10,17 @@ public class DracoPanel {
 
     public int pinNum
     public DracoController teensy
-    public environment.Node[] strandNodeArray
+    public PixelNode[] strandNodeArray
 
 
     public DracoPanel() {
-        strandNodeArray = new Node[0]
+        strandNodeArray = new PixelNode[0]
     }
 
 
-    // If we don't specify environment.Node[] (instead of just Node[]), it was conflicting with an existing Node[] class in groovy
+    // If we don't specify environment.PixelNode[] (instead of just PixelNode[]), it was conflicting with an existing PixelNode[] class in groovy
     // Strangly it would run in IntelliJ, but when I compiled the app with gradle it complained
-    public environment.Node[] buildPanel(DracoController theTeensy, int thePinNum, String panelSpecies, int globalIndex, int startX, int startY, int startZ, int rotation) {
+    public PixelNode[] buildPanel(DracoController theTeensy, int thePinNum, String panelSpecies, int globalIndex, int startX, int startY, int startZ, int rotation) {
 
         //used for sending UDP data for this strand
         teensy = theTeensy
@@ -44,7 +44,7 @@ public class DracoPanel {
           """.stripIndent())
         }
 
-        // the node definitions.  not a Node object (yet), but a map like [ strandIdx, x, y ]
+        // the node definitions.  not a PixelNode object (yet), but a map like [ strandIdx, x, y ]
         // don't know if sorting matters, but they were sorted previously so I'm sorting them now
         List<Map> nodeDefs = speciesMapping.nodes.sort { n -> n.strandIdx }
 
@@ -52,7 +52,7 @@ public class DracoPanel {
         strandNodeArray = nodeDefs.collect { Map n ->
           int x = n.x * _scale
           int y = n.y * _scale
-          new Node(startX + x, startY + y, startZ, globalIndex++, null)
+          new PixelNode(startX + x, startY + y, startZ, globalIndex++, null)
         }
 
         return strandNodeArray

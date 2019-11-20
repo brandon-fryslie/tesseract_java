@@ -117,17 +117,17 @@ public class OnScreen {
         if(_myMain.stage.getNodes() != null) {
             int l = _myMain.stage.getNodes().length;
             for (int i = 0; i < l; i++) {
-                Node node = _myMain.stage.getNodes()[i];
-                p.stroke(node.r, node.g, node.b);
-                p.point(node.x, node.y, node.z);
+                PixelNode pixelNode = _myMain.stage.getNodes()[i];
+                p.stroke(pixelNode.getR(), pixelNode.getB(), pixelNode.getG());
+                p.point(pixelNode.getX(), pixelNode.getY(), pixelNode.getZ());
 
-                //record the "projected" node position in 2D space
-                float nX = (float)node.x;
-                float nY = (float)node.y;
-                float nZ = (float)node.z;
+                //record the "projected" pixelNode position in 2D space
+                float nX = (float) pixelNode.getX();
+                float nY = (float) pixelNode.getY();
+                float nZ = (float) pixelNode.getZ();
 
-                node.screenX = p.screenX(nX, nY, nZ);
-                node.screenY = p.screenY(nX, nY, nZ);
+                pixelNode.setScreenX(p.screenX(nX, nY, nZ));
+                pixelNode.setScreenY(p.screenY(nX, nY, nZ));
             }
         }
 

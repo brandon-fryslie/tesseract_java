@@ -40,7 +40,7 @@ class ClipMetadata {
             ],
         ],
         [
-            displayName: 'Node Scan',
+            displayName: 'PixelNode Scan',
             clipId     : 'node_scan',
             controls   : [
                 [displayName: 'Speed', type: 'knob', defaultValue: 1.0, fieldName: 'p1'],

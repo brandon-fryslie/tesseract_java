@@ -9,7 +9,7 @@ import static processing.core.PApplet.map;
 import static processing.core.PApplet.constrain;
 
 
-import environment.Node;
+import environment.PixelNode;
 import util.Util;
 
 
@@ -100,7 +100,7 @@ public class ParticleClip  extends AbstractClip {
 
     }
 
-    public int[] drawNode(Node node) {
+    public int[] drawNode(PixelNode pixelNode) {
 
         int[] nodestate = new int[3];
 
@@ -114,7 +114,7 @@ public class ParticleClip  extends AbstractClip {
         for(Particle particle : _particles) {
 
             PVector l = particle.position;
-            float dist = dist(node.x, node.y, node.z, l.x, l.y, l.z);
+            float dist = dist(pixelNode.getX(), pixelNode.getY(), pixelNode.getZ(), l.x, l.y, l.z);
             float surface = particle.size;
 
             if (dist < surface) {
@@ -125,7 +125,7 @@ public class ParticleClip  extends AbstractClip {
                 newBlue = (int) (Util.getB(particle.color) * brightness);
 
             }else if (dist >= surface+particle.ramp) {
-                //this particle has no effect on this node
+                //this particle has no effect on this pixelNode
             }else{
                 //ramp calculates a soft leading edge to the brightness threshold
                 brightness = map(dist, surface, surface+particle.ramp, 1.0f, 0);

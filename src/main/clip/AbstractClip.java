@@ -1,7 +1,7 @@
 package clip;
 
 import app.TesseractMain;
-import environment.Node;
+import environment.PixelNode;
 
 public class AbstractClip  {
 
@@ -50,7 +50,7 @@ public class AbstractClip  {
     return this.filename;
   }
 
-  public int[] drawNode(Node node) {// apply the animation logic calculated above to each node
+  public int[] drawNode(PixelNode pixelNode) {// apply the animation logic calculated above to each pixelNode
 
     return new int[3];
   }

@@ -1,7 +1,6 @@
 package clip;
 
-import environment.Node;
-import processing.core.PApplet;
+import environment.PixelNode;
 
 
 public class SolidColorClip extends AbstractClip{
@@ -40,7 +39,7 @@ public class SolidColorClip extends AbstractClip{
         blue =  (int)(p6*255);
     }
 
-    public int[] drawNode(Node node) {
+    public int[] drawNode(PixelNode pixelNode) {
 
         int[] nodestate = new int[3];
 

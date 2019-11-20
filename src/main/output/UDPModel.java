@@ -2,14 +2,13 @@ package output;
 
 
 import environment.DracoPanel;
-import hardware.Tile;
+import environment.PixelNode;
 import hypermedia.net.UDP;
 //import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
 
 import processing.core.PApplet;
 
 import hardware.*;
-import environment.Node;
 import stores.ConfigStore;
 
 
@@ -18,7 +17,6 @@ public class UDPModel {
     private PApplet p;
     private UDP udp;
 
-    public Rabbit[] rabbits;
     public DracoController[] teensies;
 
     public int myPort      = 7777; //6000 also works
@@ -42,7 +40,6 @@ public class UDPModel {
     public UDPModel(PApplet pApplet) {
         p = pApplet;
 
-        initRabbits();
         initTeensies();
 
         //red
@@ -72,12 +69,12 @@ public class UDPModel {
         udp.listen( false );
     }
 
-    // Initialize the rabbit controllers.  Number of controllers is set in env var NUM_RABBITS.  default is 0
-    private void initRabbits() {
-        Integer numRabbits = ConfigStore.get().getInt("numRabbits");
-        rabbits = new Rabbit[numRabbits];
-        // TODO: need to initialize from values in env vars
-    }
+//    // Initialize the rabbit controllers.  Number of controllers is set in env var NUM_RABBITS.  default is 0
+//    private void initRabbits() {
+//        Integer numRabbits = ConfigStore.get().getInt("numRabbits");
+//        rabbits = new Rabbit[numRabbits];
+//        // TODO: need to initialize from values in env vars
+//    }
 
     // Initialize the teensy (draco) controllers.  Number of controllers is set in env var NUM_TEENSIES.  default is 0
     private void initTeensies() {
@@ -139,21 +136,6 @@ public class UDPModel {
     }
 
     public void send() {
-        for (Rabbit rabbit : rabbits) {
-            //System.out.printf("RABBIT IP: %s \n", rabbit.ip);
-
-            for (Tile tile : rabbit.tileArray) {
-                sendTileFrame(tile);
-            }
-
-            //swap command, makes all the tiles change at once
-            byte[] data = new byte[2];
-            data[0] = (byte) (p.unhex("FF"));
-            data[1] = (byte) (p.unhex("FE"));
-            udp.send( data, rabbit.ip, rabbitPort );
-        }
-
-
         for (DracoController dracoController : teensies) {
             //sendTeensyNodesAsPanels(dracoController);
 
@@ -169,34 +151,36 @@ public class UDPModel {
 
 
     // Send tile to Tesseract
-    public void sendTileFrame(Tile tile){
+    public void sendTileFrame(Object tile){
         //data for one tile, one frame
         byte[] data = new byte[(432+4)]; //144 nodes * 3 channels per node = 432
 
         data[0] = (byte) (p.unhex("ff")); //listen for command
         data[1] = (byte) (p.unhex("ff")); //chip command
         data[2] = (byte) (p.unhex("00")); //start command
-        data[3] = (byte) (tile.id-1); //tile address
+//        data[3] = (byte) (tile.id-1); //tile address
+        data[3] = (byte) (1); //tile address
 
         //node map for one tile
         for (int y=0; y<12; y++){
             for (int x=0; x<12; x++){
-                //one node, set each channel
-                Node node = tile.tileNodeArray[x][y];
+                //one pixelNode, set each channel
+//                PixelNode pixelNode = tile.tileNodeArray[x][y];
+                PixelNode pixelNode = new PixelNode(1,2,3, 4);
 
-                data[nodeMap[y][x]+4] = (byte)node.g;
-                data[nodeMap[y][x]+3+4] = (byte)node.r;
-                data[nodeMap[y][x]+6+4] = (byte)node.b;
+                data[nodeMap[y][x]+4] = (byte) pixelNode.getG();
+                data[nodeMap[y][x]+3+4] = (byte) pixelNode.getR();
+                data[nodeMap[y][x]+6+4] = (byte) pixelNode.getB();
 
                 //hack for using v1 tiles
-                if(tile.channelSwap){
-                    data[nodeMap[y][x]+4] = (byte)node.b;
-                    data[nodeMap[y][x]+6+4] = (byte)node.g;
-                }
+//                if(tile.channelSwap){
+//                    data[nodeMap[y][x]+4] = (byte)pixelNode.b;
+//                    data[nodeMap[y][x]+6+4] = (byte)pixelNode.g;
+//                }
             }
         }
         // send the message for 1 tile
-        String ip = tile.parentRabbit.ip;
+        String ip = "tile.parentRabbit.ip";
 
         //if(app.BROADCAST && ip!="X.X.X.X"){
             udp.send( data, ip, rabbitPort );
@@ -236,11 +220,11 @@ public class UDPModel {
             data[1] = (byte) dracoPanel.pinNum; //pin address, once again we are doing one node per pin
 
             for (int i=0; i<l; i++){
-                Node node = dracoPanel.strandNodeArray[i];
+                PixelNode pixelNode = dracoPanel.strandNodeArray[i];
 
-                data[(i*3) + 0 +2] = (byte) node.r;
-                data[(i*3) + 1 +2] = (byte) node.g;
-                data[(i*3) + 2 +2] = (byte) node.b;
+                data[(i*3) + 0 +2] = (byte) pixelNode.getR();
+                data[(i*3) + 1 +2] = (byte) pixelNode.getG();
+                data[(i*3) + 2 +2] = (byte) pixelNode.getB();
 
                 //for the love of god, something please just happen on the lights so I know my life isn't a complete sham.
                 //data[(i*3) + 0 +2] = (byte) (PApplet.unhex("FF"));
@@ -262,7 +246,7 @@ public class UDPModel {
         //basically a node is an entire panel or tile
         for (int t=0; t<length; t++){
 
-            Node node =  teensy.nodeArray[t];
+            PixelNode node =  teensy.nodeArray[t];
             int ledPerPin = 100;
 
             byte[] data = new byte[(ledPerPin*3) + 2];
