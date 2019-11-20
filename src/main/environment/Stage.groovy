@@ -2,6 +2,7 @@ package environment
 
 
 import app.TesseractMain
+import com.heroicrobot.dropbit.devices.pixelpusher.Pixel
 import hardware.DracoController
 
 public class Stage {
@@ -39,7 +40,13 @@ public class Stage {
   }
 
   public void buildStage(String stageType) {
-    PixelNode[] nodes = buildBittyStage()
+    PixelNode[] nodes
+    if (stageType == 'BITTY') {
+      nodes = buildBittyStage()
+    } else if (stageType == 'CUBOTRON') {
+      nodes = buildCubotron()
+    }
+
 
     // nodes must be initialized before here
 
@@ -150,21 +157,21 @@ public class Stage {
 
   }
 
-  private void buildCubotron() {
-
+  private List<PixelNode> buildCubotron() {
     int counter = 0
-    nodes = new PixelNode[30 * 30 * 30]
+    List<PixelNode> nodes = new PixelNode[30 * 30 * 30]
 
     // Initialize a crap-ton of nodes, just a big basic cubeotron
     for (int i = 0; i < 30; i++) {
       for (int j = 0; j < 30; j++) {
         for (int k = 0; k < 30; k++) {
-          nodes[counter] = new PixelNode(10 * i, 10 * j, 10 * k, counter, null)
+          nodes[counter] = new PixelNode(10 * i, 10 * j, 10 * k, counter)
           counter++
         }
       }
     }
 
+    nodes
   }
 
   private PixelNode[] buildBittyStage() {
