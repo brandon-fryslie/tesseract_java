@@ -40,8 +40,6 @@ public class UDPModel {
     public UDPModel(PApplet pApplet) {
         p = pApplet;
 
-        initTeensies();
-
 //        //red
 //        c[0] = 200;//255 is max
 //        c[1] = 0;
@@ -67,20 +65,6 @@ public class UDPModel {
 
         hyperMediaUdp.log( false );     // <-- printout the connection activity, but performance is affected
         hyperMediaUdp.listen( false );
-    }
-
-//    // Initialize the rabbit controllers.  Number of controllers is set in env var NUM_RABBITS.  default is 0
-//    private void initRabbits() {
-//        Integer numRabbits = ConfigStore.get().getInt("numRabbits");
-//        rabbits = new Rabbit[numRabbits];
-//        // TODO: need to initialize from values in env vars
-//    }
-
-    // Initialize the teensy (draco) controllers.  Number of controllers is set in env var NUM_TEENSIES.  default is 0
-    private void initTeensies() {
-        Integer numTeensies = ConfigStore.get().getInt("numTeensies");
-        teensies = new DracoController[numTeensies];
-        // TODO: need to objects initialize from values in env vars
     }
 
     private void createNodeMap(){

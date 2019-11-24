@@ -107,7 +107,7 @@ public class TesseractMain extends PApplet {
     onScreen = new OnScreen(this);
 
     // create channel
-    channel1 = new Channel(1);
+    channel1 = new Channel();
 
     // Tell the PlaylistManager which channel to play playlists in
     PlaylistManager.get().setChannel(this.channel1);

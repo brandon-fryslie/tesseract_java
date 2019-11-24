@@ -196,7 +196,7 @@ public class Playlist {
     */
 
 
-    this.channel.setScene(item.scene, false, 10)
+    this.channel.setScene(item.scene)
 
     //wrap this in a "debug"
     System.out.println("[Playlist] Playing scene '${item.scene.getDisplayName()}' on playlist '${this.displayName}' (Playstate: ${playState})")
