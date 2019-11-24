@@ -1,5 +1,5 @@
 /**
- * (./) UDP.java v0.2 06/01/26
+ * (./) HyperMediaUDP.java v0.2 06/01/26
  * (by) Douglas Edric Stanley & Cousot Stéphane
  * (cc) some right reserved
  * <p>
@@ -42,7 +42,7 @@ import processing.core.*;
  * <li>A <b>multicast address</b> allows to call a specific group of hosts within
  * the subnet. A multicast group is specified by a IP address in the range
  * 224.0.0.0 (reserved, should not be used) to
- * 239.255.255.255 inclusive, and by a standard UDP port number.
+ * 239.255.255.255 inclusive, and by a standard HyperMediaUDP port number.
  * <br />
  * <small>notes: the complete reference of special multicast addresses should be
  * found in the latest available version of the "Assigned Numbers RFC"
@@ -58,7 +58,7 @@ import processing.core.*;
  * when the socket receive incoming data or a timeout event. By default, the
  * "receive handler" is typically <code>receive(byte[] data)</code> but you can
  * retrieve more informations about the datagram packet, see
- * {@link UDP#setReceiveHandler(String name)} for more informations. In the same
+ * {@link HyperMediaUDP#setReceiveHandler(String name)} for more informations. In the same
  * logic, the default "timeout handler" is explicitly <code>timeout()</code>.
  * <p>
  * <small>
@@ -69,7 +69,7 @@ import processing.core.*;
  * @author Cousot Stéphane - stef@ubaa.net
  * @author Douglas Edric Stanley - http://www.abstractmachine.net/
  */
-public class UDP implements Runnable {
+public class HyperMediaUDP implements Runnable {
 
 
   // the current unicast/multicast datagram socket
@@ -97,7 +97,7 @@ public class UDP implements Runnable {
 
   // the log "header" to be set for debugging. Because log is disable by
   // default, this value is automatically replaced by the principal socket
-  // settings when a new instance of UDP is created.
+  // settings when a new instance of HyperMediaUDP is created.
   private String header = "";
 
   ///////////////////////////////// fields ///////////////////////////////
@@ -116,7 +116,7 @@ public class UDP implements Runnable {
    *
    * @param owner  the target object to be call by the receive handler
    */
-  public UDP(Object owner) {
+  public HyperMediaUDP(Object owner) {
     this(owner, 0);
   }
 
@@ -130,7 +130,7 @@ public class UDP implements Runnable {
    * @param owner  the target object to be call by the receive handler
    * @param port  local port to bind
    */
-  private UDP(Object owner, int port) {
+  public HyperMediaUDP(Object owner, int port) {
     this(owner, port, null);
   }
 
@@ -149,7 +149,7 @@ public class UDP implements Runnable {
    * @param port  local port to bind
    * @param ip  host address or group address
    */
-  private UDP(Object owner, int port, String ip) {
+  private HyperMediaUDP(Object owner, int port, String ip) {
 
     this.owner = owner;
 
@@ -201,7 +201,7 @@ public class UDP implements Runnable {
    * Close the socket. This method is automatically called by Processing when
    * the PApplet shuts down.
    *
-   * @see UDP#close()
+   * @see HyperMediaUDP#close()
    */
   public void dispose() {
     close();
@@ -278,8 +278,8 @@ public class UDP implements Runnable {
    *
    * @param message  the message to be send
    *
-   * @see  UDP#send(String message, String ip)
-   * @see  UDP#send(String message, String ip, int port)
+   * @see  HyperMediaUDP#send(String message, String ip)
+   * @see  HyperMediaUDP#send(String message, String ip, int port)
    *
    * @return boolean
    */
@@ -293,8 +293,8 @@ public class UDP implements Runnable {
    *
    * @param buffer  data to be send
    *
-   * @see  UDP#send(byte[] data, String ip)
-   * @see  UDP#send(byte[] data, String ip, int port)
+   * @see  HyperMediaUDP#send(byte[] data, String ip)
+   * @see  HyperMediaUDP#send(byte[] data, String ip, int port)
    *
    * @return boolean
    */
@@ -312,8 +312,8 @@ public class UDP implements Runnable {
    * @param message  the message to be send
    * @param ip    the destination host's IP address
    *
-   * @see  UDP#send(String message)
-   * @see  UDP#send(String message, String ip, int port)
+   * @see  HyperMediaUDP#send(String message)
+   * @see  HyperMediaUDP#send(String message, String ip, int port)
    *
    * @return boolean
    */
@@ -327,8 +327,8 @@ public class UDP implements Runnable {
    * @param buffer  data to be send
    * @param ip    the destination host's IP address
    *
-   * @see  UDP#send(byte[] buffer)
-   * @see  UDP#send(byte[] buffer, String ip, int port)
+   * @see  HyperMediaUDP#send(byte[] buffer)
+   * @see  HyperMediaUDP#send(byte[] buffer, String ip, int port)
    *
    * @return boolean
    */
@@ -347,8 +347,8 @@ public class UDP implements Runnable {
    * @param ip    the destination host's IP address
    * @param port    the destination host's port
    *
-   * @see  UDP#send(String message)
-   * @see  UDP#send(String message, String ip)
+   * @see  HyperMediaUDP#send(String message)
+   * @see  HyperMediaUDP#send(String message, String ip)
    *
    * @return boolean
    */
@@ -367,8 +367,8 @@ public class UDP implements Runnable {
    * @param ip    the destination host's IP address
    * @param port    the destination host's port
    *
-   * @see  UDP#send(byte[] buffer, String ip)
-   * @see  UDP#send(byte[] buffer, String ip, int port)
+   * @see  HyperMediaUDP#send(byte[] buffer, String ip)
+   * @see  HyperMediaUDP#send(byte[] buffer, String ip, int port)
    *
    * @return boolean
    */
@@ -417,7 +417,7 @@ public class UDP implements Runnable {
    *
    * @param size  the buffer size value in bytes or n<=0
    * @return boolean
-   * @see UDP#getBuffer()
+   * @see HyperMediaUDP#getBuffer()
    */
   public boolean setBuffer(int size) {
     boolean done = false;
@@ -449,7 +449,7 @@ public class UDP implements Runnable {
   /**
    * Return the actual socket buffer length
    * @return int
-   * @see UDP#setBuffer(int size)
+   * @see HyperMediaUDP#setBuffer(int size)
    */
   public int getBuffer() {
     return size;
@@ -469,9 +469,9 @@ public class UDP implements Runnable {
    *
    * @param on  the required listening status.
    *
-   * @see UDP#listen()
-   * @see UDP#listen(int millis)
-   * @see UDP#setReceiveHandler(String name)
+   * @see HyperMediaUDP#listen()
+   * @see HyperMediaUDP#listen(int millis)
+   * @see HyperMediaUDP#setReceiveHandler(String name)
    */
   public void listen(boolean on) {
 
@@ -498,8 +498,8 @@ public class UDP implements Runnable {
    *
    * @param millis  the required timeout value in milliseconds.
    *
-   * @see UDP#listen()
-   * @see UDP#listen(boolean on)
+   * @see HyperMediaUDP#listen()
+   * @see HyperMediaUDP#listen(boolean on)
    */
   public void listen(int millis) {
     if (isClosed()) return;
@@ -523,12 +523,12 @@ public class UDP implements Runnable {
    * <p>
    * This method force the current <code>Thread</code> to be ceased for a
    * temporary period. If you prefer listening without blocking the current
-   * thread, use the {@link UDP#listen(int millis)} or
-   * {@link UDP#listen(boolean on)} method instead.
+   * thread, use the {@link HyperMediaUDP#listen(int millis)} or
+   * {@link HyperMediaUDP#listen(boolean on)} method instead.
    *
-   * @see UDP#listen()
-   * @see UDP#listen(boolean on)
-   * @see UDP#setReceiveHandler(String name)
+   * @see HyperMediaUDP#listen()
+   * @see HyperMediaUDP#listen(boolean on)
+   * @see HyperMediaUDP#setReceiveHandler(String name)
    */
   private void listen() {
     try {
@@ -613,7 +613,7 @@ public class UDP implements Runnable {
    * </blockquote></pre>
    *
    * @param name  the receive handler name
-   * @see UDP#setTimeoutHandler(String name)
+   * @see HyperMediaUDP#setTimeoutHandler(String name)
    */
   public void setReceiveHandler(String name) {
     this.receiveHandler = name;
@@ -681,7 +681,7 @@ public class UDP implements Runnable {
    * "timeout" with no argument.
    *
    * @param name  the timeout handler name
-   * @see UDP#setReceiveHandler(String name)
+   * @see HyperMediaUDP#setReceiveHandler(String name)
    */
   public void setTimeoutHandler(String name) {
     this.timeoutHandler = name;
@@ -806,7 +806,7 @@ public class UDP implements Runnable {
    *
    * @param ttl the "Time to Live" value
    * @return boolean
-   * @see UDP#getTimeToLive()
+   * @see HyperMediaUDP#getTimeToLive()
    */
   public boolean setTimeToLive(int ttl) {
     try {
@@ -826,7 +826,7 @@ public class UDP implements Runnable {
    * the current socket is not a multicast socket).
    *
    * @return int
-   * @see UDP#setTimeToLive(int ttl)
+   * @see HyperMediaUDP#setTimeToLive(int ttl)
    */
   public int getTimeToLive() {
     try {
@@ -857,7 +857,7 @@ public class UDP implements Runnable {
     // define the "header" to retrieve at least the principal socket
     // informations : the host/port where the socket is bound.
     if (!log && header.equals(""))
-      header = "-- UDP session started at " + date + " --\n-- " + out + " --\n";
+      header = "-- HyperMediaUDP session started at " + date + " --\n-- " + out + " --\n";
 
     // print out
     if (log) {

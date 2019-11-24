@@ -3,9 +3,9 @@ package output;
 
 import environment.DracoPanel;
 import environment.PixelNode;
-import hypermedia.net.UDP;
 //import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
 
+import network.HyperMediaUDP;
 import processing.core.PApplet;
 
 import hardware.*;
@@ -15,7 +15,7 @@ import stores.ConfigStore;
 public class UDPModel {
 
     private PApplet p;
-    private UDP udp;
+    private HyperMediaUDP hyperMediaUdp;
 
     public DracoController[] teensies;
 
@@ -62,11 +62,11 @@ public class UDPModel {
 
         // create a new datagram connection on 6000
         // and wait for incoming message
-        udp = new UDP( p, myPort );
-        udp.setBuffer(10000);
+        hyperMediaUdp = new HyperMediaUDP( p, myPort );
+        hyperMediaUdp.setBuffer(10000);
 
-        udp.log( false );     // <-- printout the connection activity, but performance is affected
-        udp.listen( false );
+        hyperMediaUdp.log( false );     // <-- printout the connection activity, but performance is affected
+        hyperMediaUdp.listen( false );
     }
 
 //    // Initialize the rabbit controllers.  Number of controllers is set in env var NUM_RABBITS.  default is 0
@@ -144,7 +144,7 @@ public class UDPModel {
             //swap command, makes all the tiles change at once
             byte[] data = new byte[1];
             data[0] = (byte) ('s');
-            udp.send( data, dracoController.ip, teensyPort );
+            hyperMediaUdp.send( data, dracoController.ip, teensyPort );
         }
 
     }
@@ -183,7 +183,7 @@ public class UDPModel {
         String ip = "tile.parentRabbit.ip";
 
         //if(app.BROADCAST && ip!="X.X.X.X"){
-            udp.send( data, ip, rabbitPort );
+            hyperMediaUdp.send( data, ip, rabbitPort );
         //}
 
     }//end sendTileFrame
@@ -200,7 +200,7 @@ public class UDPModel {
             data[0] = (byte) ('f');
             data[1] = (byte) pin;
             data[2] = (byte) on;
-            udp.send(data, dracoController.ip, teensyPort);
+            hyperMediaUdp.send(data, dracoController.ip, teensyPort);
         }
     }
 
@@ -233,7 +233,7 @@ public class UDPModel {
             }
 
             // send the bytes for each tile separately
-            udp.send( data, dracoController.ip, teensyPort );
+            hyperMediaUdp.send( data, dracoController.ip, teensyPort );
         }
     }//end sendPanelFrame
 
@@ -266,7 +266,7 @@ public class UDPModel {
             }
 
             // send the bytes for each tile separately
-            udp.send( data, teensy.ip, wledPort );
+            hyperMediaUdp.send( data, teensy.ip, wledPort );
         }
     }
     */
@@ -305,8 +305,8 @@ public class UDPModel {
             }
 
             // send the message for each tile
-            //udp.send( data, broadcastIp, rabbitPort );
-            udp.send( data, "192.168.1.105", rabbitPort );
+            //hyperMediaUdp.send( data, broadcastIp, rabbitPort );
+            hyperMediaUdp.send( data, "192.168.1.105", rabbitPort );
 
 
         }//end for num tiles
@@ -315,7 +315,7 @@ public class UDPModel {
         byte[] data = new byte[2];
         data[0] = (byte) (p.unhex("FF"));
         data[1] = (byte) (p.unhex("FE"));
-        udp.send( data, broadcastIp, rabbitPort );
+        hyperMediaUdp.send( data, broadcastIp, rabbitPort );
 
 
         currentNode++;//increment node

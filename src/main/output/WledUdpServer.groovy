@@ -1,16 +1,15 @@
 package output;
 
 
-import app.TesseractMain;
-import hardware.DracoController;
-import hardware.WledController;
-import hypermedia.net.UDP;
+import app.TesseractMain
+import hardware.WledController
+import network.HyperMediaUDP;
 
 //import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
 
 
 public class WledUdpServer {
-  private UDP udp;
+  private HyperMediaUDP udp;
 
   int myPort = 7777
   int wledPort = 21324
@@ -40,7 +39,7 @@ public class WledUdpServer {
 //    c[8] = 200;
 
     // create a new datagram connection and wait for incoming message
-    udp = new UDP(TesseractMain.getMain(), myPort);
+    udp = new HyperMediaUDP(TesseractMain.getMain(), myPort);
     udp.setBuffer(10000);
 
     udp.log(false);     // <-- printout the connection activity, but performance is affected
