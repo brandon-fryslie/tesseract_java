@@ -65,9 +65,9 @@ import processing.core.*;
  * note: currently applets are not allowed to use multicast sockets
  * </small>
  *
- * @version 0.1
  * @author Cousot Stéphane - stef@ubaa.net
  * @author Douglas Edric Stanley - http://www.abstractmachine.net/
+ * @version 0.1
  */
 public class HyperMediaUDP implements Runnable {
 
@@ -87,7 +87,7 @@ public class HyperMediaUDP implements Runnable {
   private Thread thread = null;
 
   // the parent object (could be an application, a componant, etc...)
-  private Object owner = null;
+  private Object owner;
 
   // the default "receive handler" and "timeout handler" methods name.
   // these methods must be implemented (by the owner) to be called
@@ -114,7 +114,7 @@ public class HyperMediaUDP implements Runnable {
    * Create a new datagram socket and binds it to an available port and every
    * address on the local host machine.
    *
-   * @param owner  the target object to be call by the receive handler
+   * @param owner the target object to be call by the receive handler
    */
   public HyperMediaUDP(Object owner) {
     this(owner, 0);
@@ -127,8 +127,8 @@ public class HyperMediaUDP implements Runnable {
    * Pass <code>zero</code> as port number, will let the system choose an
    * available port.
    *
-   * @param owner  the target object to be call by the receive handler
-   * @param port  local port to bind
+   * @param owner the target object to be call by the receive handler
+   * @param port local port to bind
    */
   public HyperMediaUDP(Object owner, int port) {
     this(owner, port, null);
@@ -145,9 +145,9 @@ public class HyperMediaUDP implements Runnable {
    * socket, pass the group address to be joined. If this address is not a
    * valid multicast address, a broadcast socket will be created by default.
    *
-   * @param owner  the target object to be call by the receive handler
-   * @param port  local port to bind
-   * @param ip  host address or group address
+   * @param owner the target object to be call by the receive handler
+   * @param port local port to bind
+   * @param ip host address or group address
    */
   private HyperMediaUDP(Object owner, int port, String ip) {
 
@@ -170,7 +170,7 @@ public class HyperMediaUDP implements Runnable {
 
       if (!addr.isMulticastAddress()) {
         ucSocket = new DatagramSocket(port, host);  // as broadcast
-        log("bound socket to host:" + address() + ", port: " + port());
+        log("bound socket to host:" + address() + ", port: " + port);
       } else {
         mcSocket = new MulticastSocket(port);      // as multicast
         mcSocket.joinGroup(addr);
@@ -242,8 +242,8 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Returns whether the current socket is closed or not.
-   * @return boolean
-   **/
+   *
+   * @return boolean* */
   private boolean isClosed() {
     if (isMulticast()) return mcSocket == null || mcSocket.isClosed();
     return ucSocket == null || ucSocket.isClosed();
@@ -251,6 +251,7 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Return the actual socket's local port, or -1 if the socket is closed.
+   *
    * @return int
    */
   private int port() {
@@ -276,12 +277,9 @@ public class HyperMediaUDP implements Runnable {
    * Send message to the current socket. Explicitly, send message to the
    * multicast group/port or to itself.
    *
-   * @param message  the message to be send
-   *
-   * @see  HyperMediaUDP#send(String message, String ip)
-   * @see  HyperMediaUDP#send(String message, String ip, int port)
-   *
-   * @return boolean
+   * @param message the message to be send
+   * @return boolean* @see HyperMediaUDP#send(String message, String ip)
+   * @see HyperMediaUDP#send(String message, String ip, int port)
    */
   public boolean send(String message) {
     return send(message.getBytes());
@@ -291,14 +289,11 @@ public class HyperMediaUDP implements Runnable {
    * Send data to the current socket. Explicitly, send data to the multicast
    * group/port or to itself.
    *
-   * @param buffer  data to be send
-   *
-   * @see  HyperMediaUDP#send(byte[] data, String ip)
-   * @see  HyperMediaUDP#send(byte[] data, String ip, int port)
-   *
-   * @return boolean
+   * @param buffer data to be send
+   * @return boolean* @see HyperMediaUDP#send(byte [ ] data, String ip)
+   * @link HyperMediaUDP#send(byte [ ] data, String ip, int port)
    */
-  private boolean send(byte[] buffer) {
+  public boolean send(byte[] buffer) {
     // probably if the group could not be joined for a security reason
     if (isMulticast() && group == null) return false;
 
@@ -309,13 +304,10 @@ public class HyperMediaUDP implements Runnable {
   /**
    * Send message to the requested IP address, to the current socket port.
    *
-   * @param message  the message to be send
-   * @param ip    the destination host's IP address
-   *
-   * @see  HyperMediaUDP#send(String message)
-   * @see  HyperMediaUDP#send(String message, String ip, int port)
-   *
-   * @return boolean
+   * @param message the message to be send
+   * @param ip the destination host's IP address
+   * @return boolean* @see HyperMediaUDP#send(String message)
+   * @see HyperMediaUDP#send(String message, String ip, int port)
    */
   public boolean send(String message, String ip) {
     return send(message.getBytes(), ip);
@@ -324,15 +316,12 @@ public class HyperMediaUDP implements Runnable {
   /**
    * Send data to the requested IP address, to the current socket port.
    *
-   * @param buffer  data to be send
-   * @param ip    the destination host's IP address
-   *
-   * @see  HyperMediaUDP#send(byte[] buffer)
-   * @see  HyperMediaUDP#send(byte[] buffer, String ip, int port)
-   *
-   * @return boolean
+   * @param buffer data to be send
+   * @param ip the destination host's IP address
+   * @return boolean* @see HyperMediaUDP#send(byte [ ] buffer)
+   * @link HyperMediaUDP#send(byte [ ] buffer, String ip, int port)
    */
-  private boolean send(byte[] buffer, String ip) {
+  public boolean send(byte[] buffer, String ip) {
     return send(buffer, ip, port());
   }
 
@@ -343,14 +332,11 @@ public class HyperMediaUDP implements Runnable {
    * local host. Use this method to send message to another application by
    * passing <code>null</code> as the destination address.
    *
-   * @param message  the message to be send
-   * @param ip    the destination host's IP address
-   * @param port    the destination host's port
-   *
-   * @see  HyperMediaUDP#send(String message)
-   * @see  HyperMediaUDP#send(String message, String ip)
-   *
-   * @return boolean
+   * @param message the message to be send
+   * @param ip the destination host's IP address
+   * @param port the destination host's port
+   * @return boolean* @see HyperMediaUDP#send(String message)
+   * @see HyperMediaUDP#send(String message, String ip)
    */
   public boolean send(String message, String ip, int port) {
     return send(message.getBytes(), ip, port);
@@ -363,17 +349,13 @@ public class HyperMediaUDP implements Runnable {
    * local host. Use this method to send data to another application by
    * passing <code>null</code> as the destination address.
    *
-   * @param buffer  data to be send
-   * @param ip    the destination host's IP address
-   * @param port    the destination host's port
-   *
-   * @see  HyperMediaUDP#send(byte[] buffer, String ip)
-   * @see  HyperMediaUDP#send(byte[] buffer, String ip, int port)
-   *
-   * @return boolean
+   * @param buffer data to be send
+   * @param ip the destination host's IP address
+   * @param port the destination host's port
+   * @return boolean* @see HyperMediaUDP#send(byte [ ] buffer, String ip)
+   * @link HyperMediaUDP#send(byte [ ] buffer, String ip, int port)
    */
-  private boolean send(byte[] buffer, String ip, int port) {
-
+  public boolean send(byte[] buffer, String ip, int port) {
     boolean success = false;
     DatagramPacket pa = null;
 
@@ -415,9 +397,8 @@ public class HyperMediaUDP implements Runnable {
    * a new buffer size, call this method before implementing a new buffer in
    * memory. Explicitly before calling a receive methods.</i>
    *
-   * @param size  the buffer size value in bytes or n<=0
-   * @return boolean
-   * @see HyperMediaUDP#getBuffer()
+   * @param size the buffer size value in bytes or n<=0
+   * @return boolean* @see HyperMediaUDP#getBuffer()
    */
   public boolean setBuffer(int size) {
     boolean done = false;
@@ -448,8 +429,8 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Return the actual socket buffer length
-   * @return int
-   * @see HyperMediaUDP#setBuffer(int size)
+   *
+   * @return int* @see HyperMediaUDP#setBuffer(int size)
    */
   public int getBuffer() {
     return size;
@@ -457,6 +438,7 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Returns whether the socket wait for incoming data or not.
+   *
    * @return boolean
    */
   private boolean isListening() {
@@ -467,8 +449,7 @@ public class HyperMediaUDP implements Runnable {
   /**
    * Start/stop waiting constantly for incoming data.
    *
-   * @param on  the required listening status.
-   *
+   * @param on the required listening status.
    * @see HyperMediaUDP#listen()
    * @see HyperMediaUDP#listen(int millis)
    * @see HyperMediaUDP#setReceiveHandler(String name)
@@ -496,8 +477,7 @@ public class HyperMediaUDP implements Runnable {
    * If the timeout period occured, the owner timeout() method is
    * automatically called.
    *
-   * @param millis  the required timeout value in milliseconds.
-   *
+   * @param millis the required timeout value in milliseconds.
    * @see HyperMediaUDP#listen()
    * @see HyperMediaUDP#listen(boolean on)
    */
@@ -530,7 +510,7 @@ public class HyperMediaUDP implements Runnable {
    * @see HyperMediaUDP#listen(boolean on)
    * @see HyperMediaUDP#setReceiveHandler(String name)
    */
-  private void listen() {
+  public void listen() {
     try {
 
       byte[] buffer = new byte[size];
@@ -607,12 +587,10 @@ public class HyperMediaUDP implements Runnable {
    * additional arguments, a <code>String</code> representing the sender IP
    * address and a <code>int</code> representing the sender port :
    * <p><blockquote><pre>
-   * void myCustomReceiveHandler(byte[] message, String ip, int port) {
-   *	// do something here...
-   * }
-   * </blockquote></pre>
+   * void myCustomReceiveHandler(byte[] message, String ip, int port) {* 	// do something here...
+   *}* </blockquote></pre>
    *
-   * @param name  the receive handler name
+   * @param name the receive handler name
    * @see HyperMediaUDP#setTimeoutHandler(String name)
    */
   public void setReceiveHandler(String name) {
@@ -622,7 +600,7 @@ public class HyperMediaUDP implements Runnable {
   /**
    * Call the default receive target handler method.
    *
-   * @param data  the data to be passed
+   * @param data the data to be passed
    * @throws NoSuchMethodException
    */
   private void callReceiveHandler(byte[] data)
@@ -633,8 +611,8 @@ public class HyperMediaUDP implements Runnable {
     Method method;
 
     try {
-      types = new Class[]{data.getClass()};
-      values = new Object[]{data};
+      types = [data.getClass()]
+      values = [data]
       method = owner.getClass().getMethod(receiveHandler, types);
       method.invoke(owner, values);
     } catch (IllegalAccessException e) {
@@ -647,9 +625,9 @@ public class HyperMediaUDP implements Runnable {
   /**
    * Call the receive target handler implemented with the optional arguments.
    *
-   * @param data    the data to be passed
-   * @param ip    the IP adress to be passed
-   * @param port    the port number to be passed
+   * @param data the data to be passed
+   * @param ip the IP adress to be passed
+   * @param port the port number to be passed
    */
   private void callReceiveHandler(byte[] data, String ip, int port) {
 
@@ -658,14 +636,8 @@ public class HyperMediaUDP implements Runnable {
     Method method;
 
     try {
-      types = new Class[]{data.getClass(),
-          ip.getClass(),
-          Integer.TYPE
-      };
-      values = new Object[]{data,
-          ip,
-          new Integer(port)
-      };
+      types = [data.getClass(), ip.getClass(), Integer.TYPE]
+      values = [data, ip, port]
       method = owner.getClass().getMethod(receiveHandler, types);
       method.invoke(owner, values);
     } catch (NoSuchMethodException e) {
@@ -680,7 +652,7 @@ public class HyperMediaUDP implements Runnable {
    * Register the target's timeout handler. By default, this method name is
    * "timeout" with no argument.
    *
-   * @param name  the timeout handler name
+   * @param name the timeout handler name
    * @see HyperMediaUDP#setReceiveHandler(String name)
    */
   public void setTimeoutHandler(String name) {
@@ -705,6 +677,7 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Returns whether the opened datagram socket is a multicast socket or not.
+   *
    * @return boolean
    */
   private boolean isMulticast() {
@@ -713,6 +686,7 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Returns whether the multicast socket is joined to a group address.
+   *
    * @return boolean
    */
   public boolean isJoined() {
@@ -721,6 +695,7 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Returns whether the opened socket send broadcast message socket or not.
+   *
    * @return boolean
    */
   private boolean isBroadcast() {
@@ -737,6 +712,7 @@ public class HyperMediaUDP implements Runnable {
   /**
    * Enables or disables the ability of the current process to send broadcast
    * messages.
+   *
    * @return boolean
    */
   public boolean broadcast(boolean on) {
@@ -760,7 +736,7 @@ public class HyperMediaUDP implements Runnable {
    * Setting loopback to false means this multicast socket does not want to
    * receive the data that it sends to the multicast group.
    *
-   * @param on  local loopback of multicast datagrams
+   * @param on local loopback of multicast datagrams
    */
   public void loopback(boolean on) {
     try {
@@ -772,6 +748,7 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Returns whether the multicast socket loopback mode is enable or not.
+   *
    * @return boolean
    */
   public boolean isLoopback() {
@@ -805,8 +782,7 @@ public class HyperMediaUDP implements Runnable {
    * return <code>true</code> if no error occured.
    *
    * @param ttl the "Time to Live" value
-   * @return boolean
-   * @see HyperMediaUDP#getTimeToLive()
+   * @return boolean* @see HyperMediaUDP#getTimeToLive()
    */
   public boolean setTimeToLive(int ttl) {
     try {
@@ -825,8 +801,7 @@ public class HyperMediaUDP implements Runnable {
    * Return the "Time to Live" value or -1 if an error occurred (or if
    * the current socket is not a multicast socket).
    *
-   * @return int
-   * @see HyperMediaUDP#setTimeToLive(int ttl)
+   * @return int* @see HyperMediaUDP#setTimeToLive(int ttl)
    */
   public int getTimeToLive() {
     try {
@@ -848,9 +823,10 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Output message to the standard output stream.
-   * @param out  the output message
+   *
+   * @param out the output message
    */
-  private void log(String out) {
+  public void log(String out) {
 
     Date date = new Date();
 
@@ -871,6 +847,7 @@ public class HyperMediaUDP implements Runnable {
 
   /**
    * Output error messages to the standard error stream.
+   *
    * @param err the error string
    */
   private void error(String err) {

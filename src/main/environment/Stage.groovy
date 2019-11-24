@@ -107,8 +107,8 @@ public class Stage {
     Map config = [
         controllers: [
             [
-                name: 'controller1',
-                ip: '192.168.8.130',
+                name: 'pixelCloud1',
+                ip: 'pixelCloud1',
                 globalX: 10,
                 globalY: 0,
                 mapping: [
@@ -134,8 +134,8 @@ public class Stage {
                 ]
             ],
             [
-                name: 'controller2',
-                ip: '192.168.8.220',
+                name: 'pixelCloud2',
+                ip: 'pixelCloud2',
                 globalX: 0,
                 globalY: 0,
                 mapping: [
