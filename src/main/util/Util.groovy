@@ -27,6 +27,10 @@ public class Util {
     String.metaClass.stripColors = { -> delegate.replaceAll("\u001B\\[[;\\d]*m", "") }
   }
 
+  public static log(msg, String color = 'yellow') {
+    println msg.toString()."${color}"()
+  }
+
   // Ensure data dir exists
   public static initDataDir() {
     String path = "${new File(".").getAbsoluteFile().getParent()}/data"

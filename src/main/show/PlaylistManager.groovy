@@ -1,5 +1,6 @@
 package show
 
+import groovy.transform.CompileStatic
 import model.Channel
 import show.Playlist.PlayState
 import stores.PlaylistStore
@@ -8,6 +9,7 @@ import websocket.WebsocketInterface
 // This class will handle state update events from the UI to play the correct playlist or scene, playing and pausing the
 // playlist, etc
 
+@CompileStatic
 public class PlaylistManager {
   public static PlaylistManager instance
   private Channel channel

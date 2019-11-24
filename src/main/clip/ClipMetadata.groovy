@@ -1,6 +1,10 @@
 package clip
 
+import groovy.transform.CompileStatic
+
 // Sends information about the clips to the frontend
+// TODO: make CompileStatic
+//@CompileStatic
 class ClipMetadata {
 
   public static Map getMetadataForClip(String clipId) {

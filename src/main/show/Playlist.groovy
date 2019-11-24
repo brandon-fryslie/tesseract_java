@@ -1,9 +1,12 @@
 package show
 
 import clip.VideoClip
+import groovy.transform.CompileStatic
 import model.Channel
 import state.StateManager
+import util.Util
 
+@CompileStatic
 public class Playlist {
   int id
   String displayName
@@ -27,7 +30,7 @@ public class Playlist {
   private Timer currentTimer
   private long currentTimerStartTime
 
-  public Playlist(int id, String displayName, Integer defaultDuration = 60, List<PlaylistItem> items = []) {
+  public Playlist(int id, String displayName, Integer defaultDuration = 60, List<PlaylistItem> items = [ ]) {
     this.id = id
     this.displayName = displayName
     this.defaultDuration = defaultDuration
@@ -155,7 +158,7 @@ public class Playlist {
       return
     }
 
-    PlaylistItem item = playlistItemId == null ? this.items[0] : this.items.find { it.id == playlistItemId }
+    PlaylistItem item = playlistItemId == null ? this.items[ 0 ] : this.items.find { it.id == playlistItemId }
 
     if (!item) {
       //TODO I get runtime exceptions here
@@ -178,7 +181,7 @@ public class Playlist {
 
     // This case should be handled before we ever get here, but if it happens nbd
     if (playState == PlayState.STOPPED) {
-      println "[Playlist] WARNING: Called _playPlaylist while state is STOPPED.  Nothing to do.".yellow()
+      Util.log("[Playlist] WARNING: Called _playPlaylist while state is STOPPED.  Nothing to do.")
       return
     }
 

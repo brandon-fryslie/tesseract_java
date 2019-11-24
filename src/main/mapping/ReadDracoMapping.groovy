@@ -1,5 +1,7 @@
 package mapping
 
+import groovy.transform.CompileStatic
+
 // This will parse a CSV file in the format Aaron invented on Google Sheets.  Create a spreadsheet with a matrix of cells each representing one LED in your grid
 // There are three types of cells:
 // - node cells
@@ -19,10 +21,11 @@ package mapping
 //   If your block of node indexes isn't at origin in the spreadsheet, that is reflected in the returned results
 // - There really isn't much error handling.  You can probably break this if you try
 
+@CompileStatic
 class ReadDracoMapping {
 
   // Parse all of the CSVs and return a list of results
-  public static List<Map> parseCsvs(csvDir) {
+  public static List<Map> parseCsvs(String csvDir) {
     List<String> csvPaths = new FileNameFinder().getFileNames(csvDir, '**/*.csv')
 
     // 'collect' calls a function once for each list element, creating a new list of the same length with the result of the function
@@ -53,11 +56,11 @@ class ReadDracoMapping {
       Map lineResult = parseLine(currentY, line)
 
       // The '<<' merges the Maps.  shallow merge
-      result.metadata << lineResult.metadata
+      (result.metadata as List) << lineResult.metadata
 
       // addAll: adds all the elements of one list to another list
-      result.nodes.addAll lineResult.nodes
-      result.unstructured.addAll lineResult.unstructured
+      (result.nodes as List).addAll lineResult.nodes
+      (result.unstructured as List).addAll lineResult.unstructured
     }
 
     return result
@@ -66,8 +69,9 @@ class ReadDracoMapping {
   // Parses one line of the csv file.  currentY is the current y index in the matrix of nodes
   public static Map parseLine(Integer currentY, String line) {
     Map result = [:]
+
     result.nodes = []
-    result.metadata = [:]
+    result.metadata = [:] as Map<String, String>
     result.unstructured = []
 
     List<String> cells = line.split(',').collect { it.trim() } // split on ',' and trim all cells
@@ -86,13 +90,15 @@ class ReadDracoMapping {
       // metadata will just get added to the results, we can use it later, e.g., to define a panel species
       if (cell.contains(':')) {
         // groovy has this 'multiple assignment' thing.  sometimes useful
-        def (metadataKey, metadataValue) = cell.split(':')
+        String[] splitCell = cell.split(':')
+        String metadataKey = splitCell[0]
+        String metadataValue = splitCell[1]
         result.metadata[metadataKey.trim()] = metadataValue.trim()
       } else if (cell.isInteger()) {
-        result.nodes.push([x: currentX, y: currentY, strandIdx: Integer.parseInt(cell)])
+        (result.nodes as List).push([x: currentX, y: currentY, strandIdx: Integer.parseInt(cell)])
       } else {
         // Random cells with text.  why not read it?
-        result.unstructured.push(cell)
+        (result.unstructured as List).push(cell)
       }
     }
 

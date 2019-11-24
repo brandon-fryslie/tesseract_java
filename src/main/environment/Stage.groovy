@@ -2,9 +2,11 @@ package environment
 
 
 import app.TesseractMain
+import groovy.transform.CompileStatic
 import hardware.DracoController
 import hardware.WledController
 
+@CompileStatic
 public class Stage {
 
   //used to automatically define bounding box
@@ -51,7 +53,7 @@ public class Stage {
       throw new RuntimeException("ERROR: Invalid stage type: ${stageType}")
     }
 
-    PixelNode[] nodes = controllers.inject([]) { List<PixelNode> result, WledController controller ->
+    PixelNode[] nodes = controllers.inject([] as List<PixelNode>) { List<PixelNode> result, WledController controller ->
       result + controller.getPixels()
     }
 
@@ -174,15 +176,12 @@ public class Stage {
         ]
     ]
 
-    List<WledController> controllers = config.controllers.collect { Map controllerMap ->
-      new WledController(controllerMap.name, controllerMap.ip, controllerMap.globalX, controllerMap.globalY, controllerMap.mapping)
+    List<Map> controllerMaps = config.controllers as List<Map>
+
+    List<WledController> controllers = controllerMaps.collect { Map controllerMap ->
+      new WledController(controllerMap.name as String, controllerMap.ip as String, controllerMap.globalX as int, controllerMap.globalY as int, controllerMap.mapping as List<List<Integer>>)
     }
 
-
-
-
     controllers
-
-
   }
 }

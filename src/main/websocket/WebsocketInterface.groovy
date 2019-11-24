@@ -3,6 +3,8 @@ package websocket
 import app.TesseractMain
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.transform.CompileStatic
+import util.Util
 
 import java.nio.ByteBuffer
 
@@ -13,6 +15,7 @@ import org.java_websocket.server.WebSocketServer
 /**
  * Websocket Interface for providing sending and receiving data from Tesseract front-end
  */
+@CompileStatic
 class WebsocketInterface extends WebSocketServer {
 
   private static WebsocketInterface instance
@@ -45,7 +48,7 @@ class WebsocketInterface extends WebSocketServer {
 
     WebsocketInterface s = new WebsocketInterface(addr, port)
     s.start()
-    println("WebsocketInterface started on port: ${s.getPort()}".cyan())
+    Util.log("WebsocketInterface started on port: ${s.getPort()}", 'cyan')
 
     // groovy functions (or blocks) always return the last expression, so you will often see omitted return statements
     s
@@ -112,7 +115,7 @@ class WebsocketInterface extends WebSocketServer {
 //    println jsonObj
 
     if (!jsonObj['action'] || !jsonObj['action'] instanceof String || jsonObj['data'] == null) {
-      println "Error: Invalid websocket format".cyan()
+      Util.log("Error: Invalid websocket format", 'cyan')
       println jsonObj
       throw new RuntimeException("Error: JSON object from websocket must have 'action' and 'data' fields, and 'action' must be a string")
     }
@@ -151,7 +154,7 @@ class WebsocketInterface extends WebSocketServer {
 
   @Override
   void onStart() {
-    println "Websocket server started".yellow()
+    Util.log("Websocket server started")
     setConnectionLostTimeout(0)
     setConnectionLostTimeout(100)
   }
@@ -170,11 +173,11 @@ class WebsocketInterface extends WebSocketServer {
   // Shutdown server properly so we don't leave the port open when we hard kill the Processing app
   void shutdownServer() {
     try {
-      println("Trying to kill the websocket server".yellow())
+      Util.log("Trying to kill the websocket server")
       WebsocketInterface.get().stop()
-      println("The server is shut down".green())
+      Util.log("The server is shut down", 'green')
     } catch (IOException | InterruptedException e) {
-      println("Error!  Could not shut down the websocket server".red())
+      Util.log("Error!  Could not shut down the websocket server", 'red')
       e.printStackTrace()
     }
   }

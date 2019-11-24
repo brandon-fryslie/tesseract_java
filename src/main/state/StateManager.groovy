@@ -3,6 +3,7 @@ package state
 import app.TesseractMain
 import clip.AbstractClip
 import clip.ClipMetadata
+import groovy.transform.CompileStatic
 import org.java_websocket.WebSocketImpl
 import show.Playlist
 import show.Scene
@@ -10,10 +11,12 @@ import stores.MediaStore
 import stores.PlaylistStore
 import stores.SceneStore
 import show.PlaylistManager
+import util.Util
 import websocket.WebsocketInterface
 
 // State manager is responsible for managing application state and synchronizing state
 // between client(s) and server
+//@CompileStatic // can't do this due to my field overwriting shenanigans on line 60
 class StateManager {
   public static StateManager instance
 
@@ -99,7 +102,7 @@ class StateManager {
 
   // Sends the state of the relevant objects to the front end for initial hydration
   public void sendInitialState(WebSocketImpl conn, Map inData) {
-    println "[StateManager] Sending initial state to Client".cyan()
+    Util.log("[StateManager] Sending initial state to Client", 'cyan')
 
     Map data = [
             clipData    : ClipMetadata.getClipMetadata(),
@@ -115,7 +118,7 @@ class StateManager {
   // Refresh the Scenes and Playlists
   // Necessary after deleting a Scene or Playlist
   public void sendStoreRefresh() {
-    println "[StateManager] Sending store refresh to Clients".cyan()
+    Util.log("[StateManager] Sending store refresh to Clients", 'cyan')
 
     Map data = [
             sceneData   : SceneStore.get().asJsonObj(),
@@ -130,7 +133,7 @@ class StateManager {
   // Send this to all clients for now
   // In the future, we will want something like 'send to all clients except one'
   public void sendStateUpdate(String stateKey, value) {
-    println "[StateManager] Sending stateUpdate event: ${stateKey} ${value}".cyan()
+    Util.log("[StateManager] Sending stateUpdate event: ${stateKey} ${value}", 'cyan')
 
     def data = [
             key  : stateKey,
@@ -141,17 +144,17 @@ class StateManager {
   }
 
   // Handle receiving a stateUpdate event from a client
-  public void handleStateUpdate(conn, inData) {
+  public void handleStateUpdate(conn, Map inData) {
     if (inData.stateKey == "activeControls") {
-      this.handleActiveControlsUpdate(inData.value)
+      this.handleActiveControlsUpdate(inData.value as Map)
     } else if (inData.stateKey == "playlist") {
-      this.handlePlaylistUpdate(inData.value)
+      this.handlePlaylistUpdate(inData.value as Map)
     } else if (inData.stateKey == "scene") {
-      this.handleSceneUpdate(inData.value)
+      this.handleSceneUpdate(inData.value as Map)
     } else if (inData.stateKey == "sceneDelete") {
-      this.handleSceneDelete(inData.value)
+      this.handleSceneDelete(inData.value as Map)
     } else if (inData.stateKey == "playState") {
-      this.handlePlayStateUpdate(inData.value)
+      this.handlePlayStateUpdate(inData.value as Map)
     } else {
       // The reason I use RuntimeException is because they can't be caught (by Processing), so you are always guaranteed to see the stack trace
       throw new RuntimeException("Error: No handler for state key '${inData.stateKey}'")
@@ -174,7 +177,7 @@ class StateManager {
     }
 
     // Handle all other clip control value changes (floats)
-    float newValue = inData.newValue
+    float newValue = inData.newValue as float
 
     // Set the field in 'fieldName' to the value in 'newValue'
     // e.g., this will set 'p1' to '0.589378' or whatever the Control on the frontend is set to do
@@ -223,7 +226,7 @@ class StateManager {
   // Handles updates to the 'play state'
   // The playState is: whether we are playing, looping the current scene, or stopped, and the current playlistId and sceneId
   public void handlePlayStateUpdate(Map inData) {
-    int playlistId = inData.activePlaylistId
+    int playlistId = inData.activePlaylistId as int
     String playlistItemId = inData.activePlaylistItemId
     Playlist.PlayState playState = inData.playState as Playlist.PlayState
 

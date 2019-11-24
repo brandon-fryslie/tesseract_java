@@ -2,12 +2,13 @@ package output;
 
 
 import app.TesseractMain
+import groovy.transform.CompileStatic
 import hardware.WledController
 import network.HyperMediaUDP;
 
 //import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
 
-
+@CompileStatic
 public class WledUdpServer {
   private HyperMediaUDP udp;
 

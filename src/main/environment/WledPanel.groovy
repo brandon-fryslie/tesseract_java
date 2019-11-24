@@ -1,8 +1,9 @@
 package environment
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class WledPanel {
-
-
   public static List<PixelNode> buildNodes() {
     int scaleFactor = 10
 
