@@ -52,7 +52,7 @@ public class DracoPanel {
         strandNodeArray = nodeDefs.collect { Map n ->
           int x = n.x * _scale
           int y = n.y * _scale
-          new PixelNode(startX + x, startY + y, startZ, globalIndex++, null)
+          new PixelNode(startX + x, startY + y, startZ, globalIndex++)
         }
 
         return strandNodeArray

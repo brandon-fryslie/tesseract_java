@@ -122,7 +122,7 @@ public class Channel {
 
       for (int i = 0; i < 3; i++) {
         //apply mix ratios to each scene and add them together for a generic output format
-        sceneMix[i] = (int) (currentRgb[i] * _mix) + (int) (nextRgb[i] * Math.abs(_mix - 1));
+//        sceneMix[i] = (int) (currentRgb[i] * _mix) + (int) (nextRgb[i] * Math.abs(_mix - 1));
 
         //sceneMix[i] = nextRgb[i] /2;
         //System.out.printf("%d ", sceneMix[i]);

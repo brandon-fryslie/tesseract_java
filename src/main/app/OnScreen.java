@@ -71,7 +71,7 @@ public class OnScreen {
         drawFramerate();
 
         //center camera and move backward
-        p.translate(p.width/2, (p.height/2), 0);
+        p.translate(p.width/2, (p.height/2), 2);
 
         //explore the world
         if(p.mousePressed) {

@@ -42,20 +42,20 @@ public class UDPModel {
 
         initTeensies();
 
-        //red
-        c[0] = 200;//255 is max
-        c[1] = 0;
-        c[2] = 0;
-
-        //blue
-        c[3] = 0;
-        c[4] = 200;
-        c[5] = 0;
-
-        //green
-        c[6] = 0;
-        c[7] = 0;
-        c[8] = 200;
+//        //red
+//        c[0] = 200;//255 is max
+//        c[1] = 0;
+//        c[2] = 0;
+//
+//        //blue
+//        c[3] = 0;
+//        c[4] = 200;
+//        c[5] = 0;
+//
+//        //green
+//        c[6] = 0;
+//        c[7] = 0;
+//        c[8] = 200;
 
         //fill a hash map with hardware node positions
         createNodeMap();
@@ -266,7 +266,7 @@ public class UDPModel {
             }
 
             // send the bytes for each tile separately
-            udp.send( data, teensy.ip, teensyPort );
+            udp.send( data, teensy.ip, wledPort );
         }
     }
     */

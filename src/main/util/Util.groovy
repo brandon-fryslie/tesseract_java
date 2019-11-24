@@ -75,7 +75,7 @@ public class Util {
   }
 
   // returns relative paths to all files in the directory (relative to the root directory)
-  public static getMediaFileList(String type) {
+  public static List<String> getMediaFileList(String type) {
     String rootPath = "${Util.getRootDataDir()}/${type}"
 
     // Return empty array if video directory doesn't exist

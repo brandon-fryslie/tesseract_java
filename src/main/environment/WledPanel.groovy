@@ -1,11 +1,13 @@
 package environment
 
-class WifiPixelPanel {
+class WledPanel {
 
 
   public static List<PixelNode> buildNodes() {
+    int scaleFactor = 10
+
     List<PixelNode> nodes = (0..6).collect { int n ->
-      new PixelNode(n, 1, 1, n + 1)
+      new PixelNode(n * scaleFactor, 1 * scaleFactor, 1 * scaleFactor, n + 1)
     }
 
     nodes

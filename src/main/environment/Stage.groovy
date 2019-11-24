@@ -2,8 +2,8 @@ package environment
 
 
 import app.TesseractMain
-import com.heroicrobot.dropbit.devices.pixelpusher.Pixel
 import hardware.DracoController
+import hardware.WledController
 
 public class Stage {
 
@@ -39,16 +39,24 @@ public class Stage {
     this.prevNodes
   }
 
-  public void buildStage(String stageType) {
-    PixelNode[] nodes
+  // this return type will have to change but should work for now
+  public List<WledController> buildStage(String stageType) {
+    List<WledController> controllers
+
     if (stageType == 'BITTY') {
-      nodes = buildBittyStage()
+      controllers = buildBittyStage()
     } else if (stageType == 'CUBOTRON') {
-      nodes = buildCubotron()
+      controllers = buildCubotron()
+    } else {
+      throw new RuntimeException("ERROR: Invalid stage type: ${stageType}")
     }
 
+    PixelNode[] nodes = controllers.inject([]) { List<PixelNode> result, WledController controller ->
+      result + controller.getPixels()
+    }
 
-    // nodes must be initialized before here
+    nodes
+
 
     //set the boundaries of the stage
     // Clip each node to the maxX/Y/Z?
@@ -71,117 +79,109 @@ public class Stage {
     _myMain.println("maxD: " + maxD)
 
     this.nodes = nodes
-  }
 
-  private void buildTesseractStage() {
-    int counter = 0
-
-
-//    PixelPlane plane = new PixelPlane(_myMain)
-    //nodes = plane.buildFullCube(counter,-175,-175, -175, 0 );
-
-//    _myMain.udpModel.rabbits = new Rabbit[6]
-//
-//    //one rabbit per 9 tiles
-//    _myMain.udpModel.rabbits[0] = new Rabbit("192.168.1.100", 1, "mac_address")
-//    _myMain.udpModel.rabbits[1] = new Rabbit("192.168.1.105", 2, "mac_address")
-//    _myMain.udpModel.rabbits[2] = new Rabbit("192.168.1.104", 3, "mac_address")
-//    _myMain.udpModel.rabbits[3] = new Rabbit("192.168.1.102", 4, "mac_address")
-//    _myMain.udpModel.rabbits[4] = new Rabbit("192.168.1.101", 5, "mac_address")
-//    _myMain.udpModel.rabbits[5] = new Rabbit("192.168.1.103", 6, "mac_address")
-//
-//    int startY = -72
-//
-//    nodes = plane.buildPanel(_myMain.udpModel.rabbits[0], counter, -(72 * 9), startY, 0, 0, false)
-//
-//    PixelNode[] planeNodes = plane.buildPanel(_myMain.udpModel.rabbits[1], counter, -(72 * 6), startY, 0, 0, true)
-//    nodes = (PixelNode[]) _myMain.concat(nodes, planeNodes)
-//
-//    planeNodes = plane.buildPanel(_myMain.udpModel.rabbits[2], counter, -(72 * 3), startY, 0, 0, false)
-//    nodes = (PixelNode[]) _myMain.concat(nodes, planeNodes)
-//
-//    planeNodes = plane.buildPanel(_myMain.udpModel.rabbits[3], counter, 0, startY, 0, 0, false)
-//    nodes = (PixelNode[]) _myMain.concat(nodes, planeNodes)
-//
-//    planeNodes = plane.buildPanel(_myMain.udpModel.rabbits[4], counter, (72 * 3), startY, 0, 0, false)
-//    nodes = (PixelNode[]) _myMain.concat(nodes, planeNodes)
-//
-//    planeNodes = plane.buildPanel(_myMain.udpModel.rabbits[5], counter, (72 * 6), startY, 0, 0, false)
-//    nodes = (PixelNode[]) _myMain.concat(nodes, planeNodes)
-
+    controllers
 
   }
 
-
-  private void buildDracoStage() {
-
-
-    int h = 4 //number of teensies
-    //int w = 8; //number of pins per OCTO
-
-    _myMain.udpModel.teensies = new DracoController[h]
-
-    _myMain.udpModel.teensies[0] = new DracoController("192.168.1.200", 1, "mac_address")
-    _myMain.udpModel.teensies[1] = new DracoController("192.168.1.201", 2, "mac_address")
-    _myMain.udpModel.teensies[2] = new DracoController("192.168.1.202", 3, "mac_address")
-    _myMain.udpModel.teensies[3] = new DracoController("192.168.1.203", 4, "mac_address")
-
-
-    //first call here is different than the others because it initializes the node array, the others concat to it.
-    nodes = new DracoPanel().buildPanel(_myMain.udpModel.teensies[0], 1, "center_pillar_level_1_A", 0, -400, 0, 0, 0)
-
-    PixelNode[] panelNodes = new DracoPanel().buildPanel(_myMain.udpModel.teensies[0], 2, "center_pillar_level_1_B", nodes.length, -400, -100, 0, 0)
-    nodes = (PixelNode[]) _myMain.concat(nodes, panelNodes)
-
-    panelNodes = new DracoPanel().buildPanel(_myMain.udpModel.teensies[0], 3, "center_pillar_level_1_A", nodes.length, 200, 0, 0, 0)
-    nodes = (PixelNode[]) _myMain.concat(nodes, panelNodes)
-
-    panelNodes = new DracoPanel().buildPanel(_myMain.udpModel.teensies[0], 4, "center_pillar_level_1_B", nodes.length, 200, -100, 0, 0)
-    nodes = (PixelNode[]) _myMain.concat(nodes, panelNodes)
-
-
-    panelNodes = new DracoPanel().buildPanel(_myMain.udpModel.teensies[0], 4, "talon_bottom", nodes.length, 0, 0, 0, 0)
-    nodes = (PixelNode[]) _myMain.concat(nodes, panelNodes)
-
-
-    panelNodes = new DracoPanel().buildPanel(_myMain.udpModel.teensies[0], 4, "talon_top", nodes.length, 0, -100, 0, 0)
-    nodes = (PixelNode[]) _myMain.concat(nodes, panelNodes)
-
-
-    panelNodes = new DracoPanel().buildPanel(_myMain.udpModel.teensies[0], 4, "center_pillar_level_2", nodes.length, -100, 0, 0, 0)
-    nodes = (PixelNode[]) _myMain.concat(nodes, panelNodes)
-
-
-    panelNodes = new DracoPanel().buildPanel(_myMain.udpModel.teensies[0], 4, "center_pillar_level_3", nodes.length, -100, -100, 0, 0)
-    nodes = (PixelNode[]) _myMain.concat(nodes, panelNodes)
-
-  }
-
-  private List<PixelNode> buildCubotron() {
-    int counter = 0
-    List<PixelNode> nodes = new PixelNode[30 * 30 * 30]
+  private List<WledController> buildCubotron() {
+    List<List<Integer>> mapping = []
 
     // Initialize a crap-ton of nodes, just a big basic cubeotron
     for (int i = 0; i < 30; i++) {
       for (int j = 0; j < 30; j++) {
         for (int k = 0; k < 30; k++) {
-          nodes[counter] = new PixelNode(10 * i, 10 * j, 10 * k, counter)
-          counter++
+          mapping << [10 * i, 10 * j, 10 * k]
         }
       }
     }
-
-    nodes
+    [new WledController('CubotronController', 'x.x.x.x', 0, 0, mapping)]
   }
 
-  private PixelNode[] buildBittyStage() {
-    // so here, I create a instance of DracoPanel?
 
 
-    List<PixelNode> nodes = []
+  private List<WledController> buildBittyStage() {
 
-    WifiPixelPanel.buildNodes()
+    // create controller
 
+    Map config = [
+        controllers: [
+            [
+                name: 'controller1',
+                ip: '192.168.8.130',
+                globalX: 10,
+                globalY: 0,
+                mapping: [
+                    [2, 0, 0],
+                    [4, 0, 0],
+                    [6, 0, 0],
+                    [8, 0, 0],
+                    [10, 0, 0],
+                    [12, 0, 0],
+                    [14, 0, 0],
+                    [15, 1, 0],
+                    [14, 2, 0],
+                    [13, 3, 0],
+                    [12, 4, 0],
+                    [11, 5, 0],
+                    [10, 6, 0],
+                    [6, 6, 0],
+                    [5, 5, 0],
+                    [4, 4, 0],
+                    [3, 3, 0],
+                    [2, 2, 0],
+                    [1, 1, 0],
+                ]
+            ],
+            [
+                name: 'controller2',
+                ip: '192.168.8.220',
+                globalX: 0,
+                globalY: 0,
+                mapping: [
+                    [0, 0, 0],
+                    [1, 0, 0],
+                    [2, 0, 0],
+                    [3, 0, 0],
+                    [4, 0, 0],
+                    [5, 0, 0],
+                    [5, 1, 0],
+                    [4, 1, 0],
+                    [3, 1, 0],
+                    [2, 1, 0],
+                    [1, 1, 0],
+                    [0, 1, 0],
+                    [0, 2, 0],
+                    [1, 2, 0],
+                    [2, 2, 0],
+                    [3, 2, 0],
+                    [4, 2, 0],
+                    [5, 2, 0],
+                    [5, 3, 0],
+                    [4, 3, 0],
+                    [3, 3, 0],
+                    [2, 3, 0],
+                    [1, 3, 0],
+                    [0, 3, 0],
+                    [0, 4, 0],
+                    [1, 4, 0],
+                    [2, 4, 0],
+                    [3, 4, 0],
+                    [4, 4, 0],
+                    [5, 4, 0],
+                ]
+            ]
+        ]
+    ]
+
+    List<WledController> controllers = config.controllers.collect { Map controllerMap ->
+      new WledController(controllerMap.name, controllerMap.ip, controllerMap.globalX, controllerMap.globalY, controllerMap.mapping)
+    }
+
+
+
+
+    controllers
 
 
   }

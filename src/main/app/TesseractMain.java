@@ -2,8 +2,10 @@ package app;
 
 import environment.PixelNode;
 import environment.Stage;
+import hardware.WledController;
 import model.Channel;
 import output.UDPModel;
+import output.WledUdpServer;
 import processing.core.PApplet;
 import processing.video.Movie;
 import show.Playlist;
@@ -13,6 +15,9 @@ import stores.PlaylistStore;
 import stores.SceneStore;
 import util.Util;
 import websocket.WebsocketInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TesseractMain extends PApplet {
 
@@ -31,6 +36,7 @@ public class TesseractMain extends PApplet {
 
   private OnScreen onScreen;//only the main class gets to draw
   public UDPModel udpModel;
+  public WledUdpServer wledUdpServer;
   public Stage stage;
   public Channel channel1;
 
@@ -82,15 +88,6 @@ public class TesseractMain extends PApplet {
     // Initialize websocket connection
     WebsocketInterface.get();
 
-    // Clear screen
-    clear();
-
-    // Start listening for UDP messages.  Handles sending/receiving all UDP data
-    udpModel = new UDPModel(this);
-
-    // Draw the on-screen visualization
-    onScreen = new OnScreen(this);
-
     // The stage is the LED mapping
     stage = new Stage();
 
@@ -98,7 +95,16 @@ public class TesseractMain extends PApplet {
     String stageType = ConfigStore.get().getString("stageType");
 
     // eventually we might load a saved project which is a playlist and environment together
-    stage.buildStage(stageType);
+    List<WledController> controllers = stage.buildStage(stageType);
+
+    // Start listening for UDP messages.  Handles sending/receiving all UDP data
+    wledUdpServer = new WledUdpServer(controllers);
+
+    // Clear screen
+    clear();
+
+    // Draw the on-screen visualization
+    onScreen = new OnScreen(this);
 
     // create channel
     channel1 = new Channel(1);
@@ -155,7 +161,10 @@ public class TesseractMain extends PApplet {
 
 
     //PUT BACK
-    udpModel.send();
+//    udpModel.send();
+    wledUdpServer.send();
+
+
   }
 
 
@@ -189,15 +198,11 @@ public class TesseractMain extends PApplet {
   //calls happen on pApplet, then can be routed to the proper place in our code
   @Override
   public void mousePressed() {
-    udpModel.sendFlameTest(4, 1);
-
     onScreen.mousePressed();
   }
 
   @Override
   public void mouseReleased() {
-    udpModel.sendFlameTest(4, 0);
-
     onScreen.mouseReleased();
   }
 
