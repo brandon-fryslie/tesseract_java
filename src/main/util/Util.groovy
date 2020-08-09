@@ -2,6 +2,7 @@ package util
 
 import app.TesseractMain
 import groovy.json.JsonBuilder
+import groovy.transform.CompileStatic
 import show.Playlist
 import show.Playlist.PlayState
 import show.PlaylistItem
@@ -84,10 +85,10 @@ public class Util {
 
     // Return empty array if video directory doesn't exist
     if (!new File(rootPath).isDirectory()) {
-      return []
+      return [ ]
     }
 
-    List<String> res = []
+    List<String> res = [ ]
 
     new File(rootPath).eachFileRecurse(groovy.io.FileType.FILES) { File file ->
       res.push(file.getCanonicalPath().replace("${rootPath}/", ''))
@@ -101,19 +102,19 @@ public class Util {
     println new JsonBuilder(o).toPrettyString()
   }
 
-  public static int getClipEnumValue(String clipId) {
+  public static app.TesseractMain.CLIPTYPES getClipEnumValue(String clipId) {
     // map of clipId to ENUM value
     Map clipIdMap = [
-        color_wash   : TesseractMain.COLORWASH,
-        node_scan    : TesseractMain.NODESCAN,
-        solid_color  : TesseractMain.SOLID,
-        video        : TesseractMain.VIDEO,
-        particle_clip: TesseractMain.PARTICLE,
-        perlin_noise : TesseractMain.PERLINNOISE,
-        lines_clip     : TesseractMain.LINESCLIP,
+        color_wash   : app.TesseractMain.CLIPTYPES.COLORWASH,
+        node_scan    : app.TesseractMain.CLIPTYPES.NODESCAN,
+        solid_color  : app.TesseractMain.CLIPTYPES.SOLID,
+        video        : app.TesseractMain.CLIPTYPES.VIDEO,
+        particle_clip: app.TesseractMain.CLIPTYPES.PARTICLE,
+        perlin_noise : app.TesseractMain.CLIPTYPES.PERLINNOISE,
+        lines_clip   : app.TesseractMain.CLIPTYPES.LINESCLIP,
     ]
 
-    Integer enumVal = clipIdMap[clipId]
+    app.TesseractMain.CLIPTYPES enumVal = clipIdMap[ clipId ]
 
     if (enumVal == null) {
       throw new RuntimeException("Error: No matching class for clipId: ${clipId}")
@@ -168,13 +169,13 @@ public class Util {
     PlaylistStore.get().addOrUpdate(playlist1)
 
     List<PlaylistItem> playlist2Items = new LinkedList<>(Arrays.asList(
-            new PlaylistItem(UUID.randomUUID().toString(), 'LinesClip', 10),
+        new PlaylistItem(UUID.randomUUID().toString(), 'LinesClip', 10),
         new PlaylistItem(UUID.randomUUID().toString(), 'PerlinNoise', 10),
         new PlaylistItem(UUID.randomUUID().toString(), 'Particles', 10),
         new PlaylistItem(UUID.randomUUID().toString(), 'Purple', 4),
         new PlaylistItem(UUID.randomUUID().toString(), 'Red', 3),
         new PlaylistItem(UUID.randomUUID().toString(), 'Yellow', 4),
-            new PlaylistItem(UUID.randomUUID().toString(), 'Color Wash', 4),
+        new PlaylistItem(UUID.randomUUID().toString(), 'Color Wash', 4),
     ))
 
     Playlist playlist2 = new Playlist(2, "Color Cube", 60, playlist2Items)
@@ -205,14 +206,14 @@ public class Util {
     // These are hydrated from the json now.  creating them here will update the existing data in the store, but this can be commented out and it will load entirely from disk
     // If we specify the id in the constructor and it matches an existing Scene, it will update the data.  omitting the ID from the constructor will use the max id + 1 for the new scene
     List<Scene> scenes = [
-        new Scene(1, "Yellow", TesseractMain.SOLID, [0, 0, 0, 1, 1, 0, 0, 0] as float[]),
-        new Scene(2, "Purple", TesseractMain.SOLID, [0, 0, 0, 1, 0, 1, 0, 0] as float[]),
-        new Scene(3, "Red", TesseractMain.SOLID, [0, 0, 0, 1, 0, 0, 0, 0] as float[]),
-        new Scene(4, "Color Wash", TesseractMain.COLORWASH, [0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0] as float[]),
-        new Scene(5, "PixelNode Scanner", TesseractMain.NODESCAN, [0, 0, 0, 0, 0, 0, 0, 0] as float[]),
-        new Scene(6, "Particles", TesseractMain.PARTICLE, [0.5f, 0.5f, 0.5f, 0.0f, 0.5f, 1, 1, 1] as float[]),
-        new Scene(7, "PerlinNoise", TesseractMain.PERLINNOISE, [0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0, 0, 0] as float[]),
-        new Scene(8, "LinesClip", TesseractMain.LINESCLIP, [0.5f, 0.5f, 0.5f, 0.0f, 0.5f, 1, 1, 1] as float[]),
+        new Scene(1, "Yellow", TesseractMain.CLIPTYPES.SOLID, [ 0, 0, 0, 1, 1, 0, 0, 0 ] as float[]),
+        new Scene(2, "Purple", TesseractMain.CLIPTYPES.SOLID, [ 0, 0, 0, 1, 0, 1, 0, 0 ] as float[]),
+        new Scene(3, "Red", TesseractMain.CLIPTYPES.SOLID, [ 0, 0, 0, 1, 0, 0, 0, 0 ] as float[]),
+        new Scene(4, "Color Wash", TesseractMain.CLIPTYPES.COLORWASH, [ 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0 ] as float[]),
+        new Scene(5, "PixelNode Scanner", TesseractMain.CLIPTYPES.NODESCAN, [ 0, 0, 0, 0, 0, 0, 0, 0 ] as float[]),
+        new Scene(6, "Particles", TesseractMain.CLIPTYPES.PARTICLE, [ 0.5f, 0.5f, 0.5f, 0.0f, 0.5f, 1, 1, 1 ] as float[]),
+        new Scene(7, "PerlinNoise", TesseractMain.CLIPTYPES.PERLINNOISE, [ 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0, 0, 0 ] as float[]),
+        new Scene(8, "LinesClip", TesseractMain.CLIPTYPES.LINESCLIP, [ 0.5f, 0.5f, 0.5f, 0.0f, 0.5f, 1, 1, 1 ] as float[]),
     ]
 
     // Check to see if we have videos before blindly trying to create scenes.  TODO: improve this logic.  do better at removing scenes for video files that no longer exist
@@ -221,7 +222,7 @@ public class Util {
       int nextIdx = 9
 
       List<Scene> videoScenes = MediaStore.get().getMediaOfType('videos').collect { String videoPath ->
-        Scene s = new Scene(nextIdx, videoPath, TesseractMain.VIDEO, [0, 0, 0, 0, 0, 0, 0, 0] as float[], videoPath)
+        Scene s = new Scene(nextIdx, videoPath, TesseractMain.CLIPTYPES.VIDEO, [ 0, 0, 0, 0, 0, 0, 0, 0 ] as float[], videoPath)
         nextIdx++
         s
       }

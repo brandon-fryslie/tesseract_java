@@ -36,7 +36,7 @@ public class PerlinNoiseClip  extends AbstractClip {
 
     }
 
-    public void run() {
+    public void beforeFrame() {
 
         _speed = p1/10;
         _theta += _speed;

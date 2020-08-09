@@ -28,7 +28,7 @@ public class SolidColorClip extends AbstractClip{
         super.init();
     }
 
-    public void run() {
+    public void beforeFrame() {
         //map local vars to abstract clip parameters
         hue = p1;
         saturation = p2;

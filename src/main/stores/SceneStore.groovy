@@ -1,5 +1,6 @@
 package stores
 
+import app.TesseractMain
 import clip.ClipMetadata
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
@@ -70,7 +71,7 @@ class SceneStore extends BaseStore implements IJsonPersistable {
   // - Hydrate references to objects (e.g., 'clipId: 1' somehow matches the clip...maybe store a map that points clipId to class right now?)
   public Scene createSceneFromJson(jsonObj) {
     // find the correct clipClass for the clipId
-    Integer clipClass = Util.getClipEnumValue(jsonObj.clipId)
+    TesseractMain.CLIPTYPES clipClass = Util.getClipEnumValue(jsonObj.clipId)
 
     // ensure the list is the right size
     float[] values = new float[8]

@@ -28,7 +28,7 @@ public class ColorWashClip extends AbstractClip {
     }
 
 
-    public void run() {
+    public void beforeFrame() {
         _angle1 = p1;
         _angle2 = p1;
 

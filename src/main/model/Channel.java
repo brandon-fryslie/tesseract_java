@@ -19,7 +19,7 @@ public class Channel {
   public void run() {
     if (_currentScene != null) {
       if (_currentScene.getClip() != null) {
-        _currentScene.getClip().run();
+        _currentScene.getClip().beforeFrame();
       }
     }
   }

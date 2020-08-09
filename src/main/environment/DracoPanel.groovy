@@ -19,7 +19,7 @@ public class DracoPanel {
 
 
     // If we don't specify environment.PixelNode[] (instead of just PixelNode[]), it was conflicting with an existing PixelNode[] class in groovy
-    // Strangly it would run in IntelliJ, but when I compiled the app with gradle it complained
+    // Strangly it would beforeFrame in IntelliJ, but when I compiled the app with gradle it complained
     public PixelNode[] buildPanel(DracoController theTeensy, int thePinNum, String panelSpecies, int globalIndex, int startX, int startY, int startZ, int rotation) {
 
         //used for sending UDP data for this strand

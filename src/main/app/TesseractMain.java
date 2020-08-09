@@ -26,27 +26,26 @@ public class TesseractMain extends PApplet {
 
 
   //CLIP CLASS ENUM
-  public static final int NODESCAN = 0;
-  public static final int SOLID = 1;
-  public static final int COLORWASH = 2;
-  public static final int VIDEO = 3;
-  public static final int PARTICLE = 4;
-  public static final int PERLINNOISE = 5;
-  public static final int LINESCLIP = 6;
+  public enum CLIPTYPES {
+    NODESCAN, SOLID, COLORWASH, VIDEO, PARTICLE, PERLINNOISE, LINESCLIP
+  }
 
-  private OnScreen onScreen;//only the main class gets to draw
-  public UDPModel udpModel;
-  public WledUdpServer wledUdpServer;
-  public Stage stage;
-  public Channel channel1;
+  private OnScreen onScreen; //only the main class gets to draw
+  private WledUdpServer wledUdpServer;
+  private Stage stage;
+  private Channel channel1;
 
-  //Click the arrow on the line below to run the program in .idea
+  //Click the arrow on the line below to beforeFrame the program in .idea
   public static void main(String[] args) {
     PApplet.main("app.TesseractMain", args);
   }
 
   public static TesseractMain getMain() {
     return _main;
+  }
+
+  public Stage getStage() {
+    return this.stage;
   }
 
   @Override
@@ -127,64 +126,31 @@ public class TesseractMain extends PApplet {
   public void draw() {
     clear();
 
-    //call run() on the current clips inside channels
+    //call beforeFrame() on the current clips inside channels
     channel1.run();
-    //channel2.run();
+    //channel2.beforeFrame();
 
-
-    //get the full list of hardware nodes
-    int l = stage.getNodes().length;
-
-    PixelNode[] nextPixelNodes = stage.getNodes();
-
-    // something for transitions
-//    stage.prevNodes = stage.getNodes();
-
-    for (int i = 0; i < l; i++) {
-      PixelNode node = nextPixelNodes[i];
+    for (PixelNode node : stage.getNodes()) {
       int[] rgb = renderNode(node); //does the blending between the channels, apply master FX
-
-
 
       //now store that color on the node so we can send it as UDP data to the lights
       node.setRGB(rgb[0], rgb[1], rgb[2]);
-
-      nextPixelNodes[i] = node;
     }
 
-//    stage.nodes = nextPixelNodes;
-
+    // Draw onScreen representation
     onScreen.draw();
 
-    //push dummy packets out to LEDS
-    //udpModel.sendRabbitTest();
-
-
-    //PUT BACK
-//    udpModel.send();
+    // Send UDP Packets
     wledUdpServer.send();
-
-
   }
 
 
-  //determine final color for each pixelNode each frame
+  // determine final color for each pixelNode each frame
+  // This is where we would mix multiple channels of data
   public int[] renderNode(PixelNode pixelNode) {
-    //return
-    int[] rgb1 = channel1.drawNode(pixelNode);
+    return channel1.drawNode(pixelNode);
 
-
-    //apply channel brightness
-    rgb1[0] = (int)rgb1[0];
-    rgb1[1] = (int)rgb1[1];
-    rgb1[2] = (int)rgb1[2];
-
-    //TODO mix the 2 channels together
-
-    return rgb1;
-
-  }//end render pixelNode
-
+  }
 
   private void createShutdownHook() {
     Runtime.getRuntime().addShutdownHook(new Thread() {

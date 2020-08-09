@@ -10,17 +10,17 @@ import hardware.WledController
 public class Stage {
 
   //used to automatically define bounding box
-  public int maxX
-  public int maxY
-  public int maxZ
+  int maxX
+  int maxY
+  int maxZ
 
-  public int minX
-  public int minY
-  public int minZ
+  int minX
+  int minY
+  int minZ
 
-  public float maxW
-  public float maxH
-  public float maxD
+  float maxW
+  float maxH
+  float maxD
 
   //	An array of all the LEDs, used for render
   private PixelNode[] nodes
@@ -72,9 +72,9 @@ public class Stage {
       if (n.z < minZ) minZ = n.z
     }
 
-    maxW = maxX + Math.abs(_myMain.stage.minX)
-    maxH = maxY + Math.abs(_myMain.stage.minY)
-    maxD = maxZ + Math.abs(_myMain.stage.minZ)
+    maxW = maxX + Math.abs(_myMain.getStage().minX)
+    maxH = maxY + Math.abs(_myMain.getStage().minY)
+    maxD = maxZ + Math.abs(_myMain.getStage().minZ)
 
     _myMain.println("maxW: " + maxW)
     _myMain.println("maxH: " + maxH)

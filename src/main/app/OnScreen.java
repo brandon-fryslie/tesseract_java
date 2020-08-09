@@ -6,169 +6,165 @@ import environment.*;
 
 public class OnScreen {
 
-    private PApplet p;
+  private PApplet p;
 
-    private float _xrot;
-    private float _yrot;
-    private float _newXrot;
-    private float _newYrot;
-    private float _xStart;
-    private float _yStart;
-    private float _xDelta;
-    private float _yDelta;
-    private float _xMove;
-    private float _yMove;
+  private float _xrot;
+  private float _yrot;
+  private float _newXrot;
+  private float _newYrot;
+  private float _xStart;
+  private float _yStart;
+  private float _xDelta;
+  private float _yDelta;
+  private float _xMove;
+  private float _yMove;
 
-    private TesseractMain _myMain;
+  private TesseractMain _myMain;
 
 
-    public OnScreen(PApplet pApplet) {
-        p = pApplet;
+  public OnScreen(PApplet pApplet) {
+    p = pApplet;
 
-        _xrot = 0;
-        _yrot = 0;
-        _newXrot = 0;
-        _newYrot = 0;
-        _xStart = 0;
-        _yStart = 0;
-        _xDelta = 0;
-        _yDelta = 0;
-        _xMove = 0;
-        _yMove = 0;
+    _xrot = 0;
+    _yrot = 0;
+    _newXrot = 0;
+    _newYrot = 0;
+    _xStart = 0;
+    _yStart = 0;
+    _xDelta = 0;
+    _yDelta = 0;
+    _xMove = 0;
+    _yMove = 0;
 
-        _myMain = TesseractMain.getMain();
+    _myMain = TesseractMain.getMain();
+  }
+
+  private void drawAxes(float size) {
+    p.strokeWeight(1);
+    //X  - red
+    p.stroke(220, 0, 0);
+    p.line(0, 0, 0, size, 0, 0);
+    //Y - green
+    p.stroke(0, 220, 0);
+    p.line(0, 0, 0, 0, size, 0);
+    //Z - blue
+    p.stroke(0, 0, 220);
+    p.line(0, 0, 0, 0, 0, size);
+  }
+
+  private void drawBoundingBox() {
+    p.stroke(60, 60, 60);
+    p.noFill();
+
+    p.pushMatrix();
+    p.translate(_myMain.getStage().getMinX() + (_myMain.getStage().getMaxW() / 2), _myMain.getStage().getMinY() + (_myMain.getStage().getMaxH() / 2), _myMain.getStage().getMinZ() + (_myMain.getStage().getMaxD() / 2));
+    p.box(_myMain.getStage().getMaxW(), _myMain.getStage().getMaxH(), _myMain.getStage().getMaxD());
+    p.popMatrix();
+  }
+
+  public void draw() {
+
+    p.background(20);
+    p.noFill();
+    p.ortho();
+
+    drawFramerate();
+
+    //center camera and move backward
+    p.translate(p.width / 2, p.height / 2, 2);
+
+    //explore the world
+    if (p.mousePressed) {
+      _xDelta = _xStart - p.mouseX;
+      _yDelta = _yStart - p.mouseY;
+
+    } else {
+      _xDelta = 0;
+      _yDelta = 0;
     }
 
-    private void drawAxes(float size){
-        p.strokeWeight (1);
-        //X  - red
-        p.stroke(220,0,0);
-        p.line(0,0,0,size,0,0);
-        //Y - green
-        p.stroke(0,220,0);
-        p.line(0,0,0,0,size,0);
-        //Z - blue
-        p.stroke(0,0,220);
-        p.line(0,0,0,0,0,size);
+    _newXrot = _xMove - _xDelta;
+    _newYrot = _yMove - _yDelta;
+
+    //easing
+    float diff = _xrot - _newXrot;
+    if (Math.abs(diff) > 0.01) {
+      _xrot -= diff / 6.0;
     }
 
-    private void drawBoundingBox(){
-        p.stroke(60,60,60);
-        p.noFill();
-
-        p.pushMatrix();
-        p.translate(_myMain.stage.minX+(_myMain.stage.maxW /2), _myMain.stage.minY+(_myMain.stage.maxH /2), _myMain.stage.minZ+(_myMain.stage.maxD /2));
-        p.box(_myMain.stage.maxW, _myMain.stage.maxH, _myMain.stage.maxD);
-        p.popMatrix();
+    diff = _yrot - _newYrot;
+    if (Math.abs(diff) > 0.01) {
+      _yrot -= diff / 6.0;
     }
 
-    public void draw() {
+    p.rotateX(p.map(_yrot, 0, p.height, p.PI, -p.PI));
+    p.rotateY(p.map(_xrot, 0, p.width, p.PI, -p.PI));
 
-        p.background(20);
-        p.noFill();
-        p.ortho();
+    drawAxes(600);
 
-        drawFramerate();
-
-        //center camera and move backward
-        p.translate(p.width/2, (p.height/2), 2);
-
-        //explore the world
-        if(p.mousePressed) {
-            _xDelta = _xStart - p.mouseX;
-            _yDelta = _yStart - p.mouseY;
-
-        }else{
-            _xDelta = 0;
-            _yDelta = 0;
-        }
-
-        _newXrot = _xMove - _xDelta;
-        _newYrot = _yMove - _yDelta;
-
-        //easing
-        float diff = _xrot-_newXrot;
-        if (Math.abs(diff) >  0.01) { _xrot -= diff/6.0; }
-
-        diff = _yrot-_newYrot;
-        if (Math.abs(diff) >  0.01) { _yrot -= diff/6.0; }
-
-        p.rotateX(p.map(_yrot,0, p.height, p.PI, -p.PI));
-        p.rotateY(p.map(_xrot,0, p.width, p.PI, -p.PI));
-
-        drawAxes(600);
-
-        drawBoundingBox();
+    drawBoundingBox();
 
 
-        p.pushMatrix();
+    p.pushMatrix();
 
-        //because the coordinate system changes with every rotate call, the axes of rotation "sticks" to our object. This is not what we want.
-        //we want to translate the object on multiple axes using the current global coordinates.
-        //float valueX = 45, valueY = 0, valueZ = 35.3f;
+    //because the coordinate system changes with every rotate call, the axes of rotation "sticks" to our object. This is not what we want.
+    //we want to translate the object on multiple axes using the current global coordinates.
+    //float valueX = 45, valueY = 0, valueZ = 35.3f;
 
-        //for Tesseract only
-        //rotateXYZ(p.radians(valueX), p.radians(valueY), p.radians(valueZ));
-
-
-        //draw nodes
-        p.strokeWeight(4);
-
-        if(_myMain.stage.getNodes() != null) {
-            int l = _myMain.stage.getNodes().length;
-            for (int i = 0; i < l; i++) {
-                PixelNode pixelNode = _myMain.stage.getNodes()[i];
-                p.stroke(pixelNode.getR(), pixelNode.getB(), pixelNode.getG());
-                p.point(pixelNode.getX(), pixelNode.getY(), pixelNode.getZ());
-
-                //record the "projected" pixelNode position in 2D space
-                float nX = (float) pixelNode.getX();
-                float nY = (float) pixelNode.getY();
-                float nZ = (float) pixelNode.getZ();
-
-                pixelNode.setScreenX(p.screenX(nX, nY, nZ));
-                pixelNode.setScreenY(p.screenY(nX, nY, nZ));
-            }
-        }
-
-        p.popMatrix();
+    //for Tesseract only
+    //rotateXYZ(p.radians(valueX), p.radians(valueY), p.radians(valueZ));
 
 
+    // Set stroke weight for onscreen LED representation
+    p.strokeWeight(8);
+
+    for (PixelNode pixelNode : _myMain.getStage().getNodes()) {
+      p.stroke(pixelNode.getR(), pixelNode.getG(), pixelNode.getB());
+      p.point(pixelNode.getX(), pixelNode.getY(), pixelNode.getZ());
+
+      //record the "projected" pixelNode position in 2D space
+      float nX = (float) pixelNode.getX();
+      float nY = (float) pixelNode.getY();
+      float nZ = (float) pixelNode.getZ();
+
+      pixelNode.setScreenX(p.screenX(nX, nY, nZ));
+      pixelNode.setScreenY(p.screenY(nX, nY, nZ));
     }
 
-    private void drawFramerate()
-    {
-        //show framerate, upper right corner
-        p.textSize (14);
-        p.fill(160);
-        p.text("FPS " + p.str(p.floor(p.frameRate)), p.width-60, 20);
-    }
+    p.popMatrix();
+  }
+
+  private void drawFramerate() {
+    //show framerate, upper right corner
+    p.textSize(14);
+    p.fill(160);
+    p.text("FPS " + PApplet.str(PApplet.floor(p.frameRate)), p.width - 60, 20);
+  }
 
 
+  public void mousePressed() {
+    _xStart = p.mouseX;
+    _yStart = p.mouseY;
+  }
 
-    public void mousePressed() {
-        _xStart = p.mouseX;
-        _yStart = p.mouseY;
-    }
+  public void mouseReleased() {
+    _xMove = _xMove - _xDelta;
+    _yMove = _yMove - _yDelta;
+  }
 
-    public void mouseReleased() {
-        _xMove = _xMove - _xDelta;
-        _yMove = _yMove - _yDelta;
-    }
+  private void rotateXYZ(float xx, float yy, float zz) {
+    float cx, cy, cz, sx, sy, sz;
 
-    private void rotateXYZ(float xx, float yy, float zz) {
-        float cx, cy, cz, sx, sy, sz;
+    cx = PApplet.cos(xx);
+    cy = PApplet.cos(yy);
+    cz = PApplet.cos(zz);
+    sx = PApplet.sin(xx);
+    sy = PApplet.sin(yy);
+    sz = PApplet.sin(zz);
 
-        cx = p.cos(xx);
-        cy = p.cos(yy);
-        cz = p.cos(zz);
-        sx = p.sin(xx);
-        sy = p.sin(yy);
-        sz = p.sin(zz);
-
-        p.applyMatrix(cy*cz, (cz*sx*sy)-(cx*sz), (cx*cz*sy)+(sx*sz), 0.0f,
-                cy*sz, (cx*cz)+(sx*sy*sz), (-cz*sx)+(cx*sy*sz), 0.0f,
-                -sy, cy*sx, cx*cy, 0.0f,
-                0.0f, 0.0f, 0.0f, 1.0f);
-    }
+    p.applyMatrix(cy * cz, (cz * sx * sy) - (cx * sz), (cx * cz * sy) + (sx * sz), 0.0f,
+        cy * sz, (cx * cz) + (sx * sy * sz), (-cz * sx) + (cx * sy * sz), 0.0f,
+        -sy, cy * sx, cx * cy, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f);
+  }
 }

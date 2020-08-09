@@ -19,10 +19,10 @@ public class NodeScanClip extends AbstractClip {
         _scanNode = 0;
     }
 
-    public void run() {
+    public void beforeFrame() {
         _scanNode++;
 
-        if(_scanNode >= _myMain.stage.getNodes().length){
+        if(_scanNode >= _myMain.getStage().getNodes().length){
             _scanNode = 0;
         }
 

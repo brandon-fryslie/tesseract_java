@@ -41,7 +41,7 @@ public class LinesClip  extends AbstractClip {
         _particles = new ArrayList<Particle>();
     }
 
-    public void run() {
+    public void beforeFrame() {
 
         /*
 
@@ -57,7 +57,7 @@ public class LinesClip  extends AbstractClip {
         int length = _particles.size()-1;
         for (int i = length; i >= 0; i--) {
             Particle p = _particles.get(i);
-            p.run();
+            p.beforeFrame();
             if (p.isDead()) {
                 _particles.remove(i);
             }

@@ -8,9 +8,6 @@ public class AbstractClip  {
   //CLASS VARS
   protected TesseractMain _myMain;
 
-  //display name
-  public String clipName;
-
   // Pretty string 'id' that is implemented by subclasses.  e.g., 'color_wash'.  Used for persistence / rehydration of data
   public String clipId;
 
@@ -32,7 +29,7 @@ public class AbstractClip  {
     _myMain = app.TesseractMain.getMain();
   }
 
-  public void run() {// animation logic that runs per frame
+  public void beforeFrame() {// animation logic that runs per frame
 
   }
 
